@@ -1,5 +1,5 @@
 import type { INodeProperties } from 'n8n-workflow';
-import { metadataField, productLocator } from '../../shared/descriptions';
+import { customerLocator, metadataField, productLocator } from '../../shared/descriptions';
 
 const show = { resource: ['subscription'], operation: ['create'] };
 const showCustomerId = { ...show, customerReferenceType: ['customerId'] };
@@ -24,13 +24,8 @@ export const subscriptionCreateDescription: INodeProperties[] = [
 		default: 'customerId',
 	},
 	{
-		displayName: 'Customer ID',
-		name: 'customerId',
-		type: 'string',
-		default: '',
-		required: true,
-		displayOptions: { show: showCustomerId },
-		routing: { send: { type: 'body', property: 'customer_id' } },
+		...customerLocator(showCustomerId, true),
+		routing: { send: { type: 'body', property: 'customer_id', value: '={{$value.value}}' } },
 	},
 	{
 		displayName: 'External Customer ID',

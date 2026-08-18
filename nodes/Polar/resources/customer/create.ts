@@ -38,7 +38,13 @@ export const customerCreateDescription: INodeProperties[] = [
 		default: '',
 		displayOptions: { show: showTeam },
 		description: 'Must be unique within the organization',
-		routing: { send: { type: 'body', property: 'email' } },
+		routing: {
+			send: {
+				type: 'body',
+				property: 'email',
+				value: '={{ $value || undefined }}',
+			},
+		},
 	},
 	{
 		displayName: 'Name',
@@ -46,7 +52,13 @@ export const customerCreateDescription: INodeProperties[] = [
 		type: 'string',
 		default: '',
 		displayOptions: { show },
-		routing: { send: { type: 'body', property: 'name' } },
+		routing: {
+			send: {
+				type: 'body',
+				property: 'name',
+				value: '={{ $value || undefined }}',
+			},
+		},
 	},
 	{
 		displayName: 'External ID',
@@ -55,7 +67,13 @@ export const customerCreateDescription: INodeProperties[] = [
 		default: '',
 		displayOptions: { show },
 		description: 'The customer ID in your own system, to reference it later without an extra lookup',
-		routing: { send: { type: 'body', property: 'external_id' } },
+		routing: {
+			send: {
+				type: 'body',
+				property: 'external_id',
+				value: '={{ $value || undefined }}',
+			},
+		},
 	},
 	billingAddressField('billingAddress', 'billing_address', show),
 	metadataField('metadata', 'metadata', 'Metadata', show),

@@ -19,6 +19,12 @@ export const orderUpdateDescription: INodeProperties[] = [
 		type: 'string',
 		default: '',
 		displayOptions: { show },
-		routing: { send: { type: 'body', property: 'billing_name' } },
+		routing: {
+			send: {
+				type: 'body',
+				property: 'billing_name',
+				value: '={{ $value || undefined }}',
+			},
+		},
 	},
 ];

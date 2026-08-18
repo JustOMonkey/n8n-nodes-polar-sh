@@ -18,7 +18,7 @@ export const checkoutCreateDescription: INodeProperties[] = [
 	{
 		...customerLocator(show, false),
 		description: 'Attach the checkout to an existing customer (optional)',
-		routing: { send: { type: 'body', property: 'customer_id', value: '={{$value.value}}' } },
+		routing: { send: { type: 'body', property: 'customer_id', value: '={{$value.value || undefined}}' } },
 	},
 	metadataField('metadata', 'metadata', 'Metadata', show),
 	metadataField('customerMetadata', 'customer_metadata', 'Customer Metadata', show),

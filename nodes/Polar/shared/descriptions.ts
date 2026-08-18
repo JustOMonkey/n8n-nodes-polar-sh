@@ -118,7 +118,8 @@ export function metadataField(
 			send: {
 				type: 'body',
 				property: bodyProperty,
-				value: '={{ Object.fromEntries(($value.field || []).map((f) => [f.key, f.value])) }}',
+				value:
+						'={{ $value.field && $value.field.length ? Object.fromEntries($value.field.map((f) => [f.key, f.value])) : undefined }}',
 			},
 		},
 	};

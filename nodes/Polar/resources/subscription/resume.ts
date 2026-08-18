@@ -11,6 +11,6 @@ export const subscriptionResumeDescription: INodeProperties[] = [
 		required: true,
 		displayOptions: { show },
 		description: 'Resumes a paused subscription immediately and starts a new billing period',
-		routing: { send: { type: 'body', property: 'resume', value: '=true' } },
+		routing: { send: { type: 'body', property: 'resume', value: '={{true}}' } },
 	},
 ];
