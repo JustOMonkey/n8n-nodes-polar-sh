@@ -2,6 +2,7 @@ import { NodeConnectionTypes, type INodeType, type INodeTypeDescription } from '
 import { checkoutDescription } from './resources/checkout';
 import { checkoutLinkDescription } from './resources/checkoutLink';
 import { customerDescription } from './resources/customer';
+import { orderDescription } from './resources/order';
 import { getProducts } from './listSearch/getProducts';
 import { getCustomers } from './listSearch/getCustomers';
 import { getProductOptions } from './loadOptions/getProductOptions';
@@ -45,12 +46,14 @@ export class Polar implements INodeType {
 					{ name: 'Checkout', value: 'checkout' },
 					{ name: 'Checkout Link', value: 'checkoutLink' },
 					{ name: 'Customer', value: 'customer' },
+					{ name: 'Order', value: 'order' },
 				],
 				default: 'checkout',
 			},
 			...checkoutDescription,
 			...checkoutLinkDescription,
 			...customerDescription,
+			...orderDescription,
 		],
 	};
 
