@@ -29,8 +29,10 @@ Resource + Operation node covering:
 - **Order** — Get Many, Get, Create, Update, Finalize, Generate Invoice, Get Invoice, Get Receipt
 - **Subscription** — Get Many, Get, Create, Update, Update Seats, Update Billing Period, Cancel, Revoke, Pause, Resume, Clear Pending Update
 - **Refund** — Get Many, Create
-
-Product, Discount, Benefit, and Benefit Grant resources ship in a follow-up release.
+- **Benefit** — Get Many, Get, Create, Update, Delete, Get Grants
+- **Benefit Grant** — Get Many
+- **Discount** — Get Many, Get, Create, Update, Delete
+- **Product** — Get Many, Get, Create, Update, Update Benefits
 
 ### Polar Trigger
 
