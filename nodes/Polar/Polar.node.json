@@ -1,0 +1,14 @@
+{
+	"node": "n8n-nodes-polar-sh.polar",
+	"nodeVersion": "1.0",
+	"codexVersion": "1.0",
+	"categories": ["Finance", "Developer Tools"],
+	"resources": {
+		"credentialDocumentation": [
+			{ "url": "https://polar.sh/docs/api-reference/introduction" }
+		],
+		"primaryDocumentation": [
+			{ "url": "https://polar.sh/docs/api-reference/introduction" }
+		]
+	}
+}
