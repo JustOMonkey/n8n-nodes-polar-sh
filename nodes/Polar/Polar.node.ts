@@ -4,6 +4,7 @@ import { benefitGrantDescription } from './resources/benefitGrant';
 import { checkoutDescription } from './resources/checkout';
 import { checkoutLinkDescription } from './resources/checkoutLink';
 import { customerDescription } from './resources/customer';
+import { discountDescription } from './resources/discount';
 import { orderDescription } from './resources/order';
 import { productDescription } from './resources/product';
 import { subscriptionDescription } from './resources/subscription';
@@ -55,6 +56,7 @@ export class Polar implements INodeType {
 					{ name: 'Checkout', value: 'checkout' },
 					{ name: 'Checkout Link', value: 'checkoutLink' },
 					{ name: 'Customer', value: 'customer' },
+					{ name: 'Discount', value: 'discount' },
 					{ name: 'Order', value: 'order' },
 					{ name: 'Product', value: 'product' },
 					{ name: 'Refund', value: 'refund' },
@@ -67,6 +69,7 @@ export class Polar implements INodeType {
 			...checkoutDescription,
 			...checkoutLinkDescription,
 			...customerDescription,
+			...discountDescription,
 			...orderDescription,
 			...productDescription,
 			...subscriptionDescription,
