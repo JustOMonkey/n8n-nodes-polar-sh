@@ -120,6 +120,12 @@ composes `issueDescription` / `issueCommentDescription`.
 | Subscription | Get | `GET /v1/subscriptions/{id}` |
 | Subscription | Create | `POST /v1/subscriptions/` |
 | Subscription | Update | `PATCH /v1/subscriptions/{id}` |
+| Subscription | Update Seats | `PATCH /v1/subscriptions/{id}` |
+| Subscription | Update Billing Period | `PATCH /v1/subscriptions/{id}` |
+| Subscription | Cancel | `PATCH /v1/subscriptions/{id}` |
+| Subscription | Pause | `PATCH /v1/subscriptions/{id}` |
+| Subscription | Resume | `PATCH /v1/subscriptions/{id}` |
+| Subscription | Clear Pending Update | `PATCH /v1/subscriptions/{id}` |
 | Subscription | Revoke | `DELETE /v1/subscriptions/{id}` |
 | Discount | Get Many | `GET /v1/discounts/` |
 | Discount | Get | `GET /v1/discounts/{id}` |
@@ -135,6 +141,17 @@ composes `issueDescription` / `issueCommentDescription`.
 | Benefit | Delete | `DELETE /v1/benefits/{id}` |
 | Benefit | Get Grants | `GET /v1/benefits/{id}/grants` |
 | Benefit Grant | Get Many | `GET /v1/benefit-grants/` |
+
+`PATCH /v1/subscriptions/{id}` is itself an 8-way discriminated union in the
+real OpenAPI spec (update product/discount/trial, resize seats, move the
+billing period, cancel, revoke via this same endpoint, pause, resume, or
+clear a pending change) — discovered during implementation planning, after
+this table was first drafted. Each variant is exposed as its own Operation
+rather than one generic "Update" hiding an internal switch, consistent with
+this spec's own stated preference (§5.2) for type selectors over hidden
+discriminators. "Revoke" still uses `DELETE /v1/subscriptions/{id}` rather
+than the redundant `PATCH` `revoke: true` variant, since both perform the
+same action and `DELETE` is the more direct match.
 
 Excluded from Checkout: `GET/PATCH /v1/checkouts/client/{client_secret}` and
 `POST /v1/checkouts/client/{client_secret}/confirm` — these are authenticated
