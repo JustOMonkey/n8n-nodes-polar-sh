@@ -1,0 +1,11 @@
+{
+	"node": "n8n-nodes-polar-sh.polarTrigger",
+	"nodeVersion": "1.0",
+	"codexVersion": "1.0",
+	"categories": ["Finance", "Developer Tools"],
+	"resources": {
+		"primaryDocumentation": [
+			{ "url": "https://polar.sh/docs/integrate/webhooks/endpoints" }
+		]
+	}
+}
