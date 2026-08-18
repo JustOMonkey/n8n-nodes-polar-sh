@@ -112,6 +112,11 @@ export class PolarTrigger implements INodeType {
 				name: 'default',
 				httpMethod: 'POST',
 				responseMode: 'onReceived',
+				// Every node with a `webhooks` definition gets an auto-generated `webhookId`
+				// (UUID) whether or not it's ever used. Without `isFullPath: true`, n8n always
+				// prefixes that UUID onto `path`, no matter what `path` is set to. Matches the
+				// core Webhook node's `defaultWebhookDescription`.
+				isFullPath: true,
 				path: '={{$parameter["path"]}}',
 			},
 		],
