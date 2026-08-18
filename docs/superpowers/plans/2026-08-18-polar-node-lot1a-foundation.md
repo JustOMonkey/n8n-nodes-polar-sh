@@ -3754,8 +3754,16 @@ const POLAR_EVENTS = [
 ] as const;
 
 function resolveSigningKey(secret: string): Buffer {
-	const value = secret.startsWith('whsec_') ? secret.slice('whsec_'.length) : secret;
-	return Buffer.from(value, 'base64');
+	// Standard Webhooks providers serialize the key as `whsec_<base64>`. Polar does
+	// not: its dashboard secret is an arbitrary UTF-8 string used directly as the
+	// HMAC key (Polar's SDK base64-encodes it before handing it to a Standard
+	// Webhooks verifier, which decodes it straight back) — confirmed against
+	// @polar-sh/sdk's `validateEvent`. Only decode base64 for an actual
+	// `whsec_`-prefixed secret; otherwise use the raw UTF-8 bytes.
+	if (secret.startsWith('whsec_')) {
+		return Buffer.from(secret.slice('whsec_'.length), 'base64');
+	}
+	return Buffer.from(secret, 'utf8');
 }
 
 function computeExpectedSignature(secret: string, id: string, timestamp: string, rawBody: string): Buffer {
@@ -3841,6 +3849,21 @@ export class PolarTrigger implements INodeType {
 		}
 
 		const secret = this.getNodeParameter('webhookSecret') as string;
+		if (!secret) {
+			res.status(500).json({ message: 'Webhook Secret is not configured on this node' });
+			return { noWebhookResponse: true };
+		}
+
+		const timestampSeconds = Number(webhookTimestamp);
+		const REPLAY_TOLERANCE_SECONDS = 300;
+		if (
+			!Number.isFinite(timestampSeconds) ||
+			Math.abs(Math.floor(Date.now() / 1000) - timestampSeconds) > REPLAY_TOLERANCE_SECONDS
+		) {
+			res.status(400).json({ message: 'Webhook timestamp is missing, invalid, or outside the allowed tolerance' });
+			return { noWebhookResponse: true };
+		}
+
 		const bodyString = rawBody.toString('utf8');
 		const expected = computeExpectedSignature(secret, webhookId, webhookTimestamp, bodyString);
 

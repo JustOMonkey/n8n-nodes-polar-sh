@@ -214,10 +214,26 @@ Behavior:
   **Standard Webhooks** spec using Node's built-in `crypto` module only (no
   added npm dependency): headers `webhook-id`, `webhook-timestamp`,
   `webhook-signature`; signed content is `` `${id}.${timestamp}.${rawBody}` ``;
-  HMAC-SHA256 keyed by the base64-decoded secret (stripping an optional
-  `whsec_` prefix if present), base64-encoded output, compared
+  HMAC-SHA256 keyed by the signing secret, base64-encoded output, compared
   (constant-time) against each `v1,<sig>` entry in `webhook-signature`
-  (space-separated, since Polar may rotate secrets).
+  (space-separated, since Polar may rotate secrets). **Key derivation is
+  provider-specific, not generic Standard Webhooks**: Polar's dashboard
+  secret is raw UTF-8 key material used as-is (confirmed against
+  `@polar-sh/sdk`'s `validateEvent`, which base64-*encodes* the secret
+  before handing it to a generic Standard Webhooks verifier that then
+  decodes it straight back) — only an explicitly `whsec_`-prefixed secret
+  is base64-decoded after stripping the prefix. Assuming every Standard
+  Webhooks secret is base64 (the naive reading of the spec) breaks Polar
+  specifically; this was caught in Lot 1a's Task 10 code review, not during
+  design, and is called out here so it isn't reintroduced.
+- `webhook-timestamp` is checked against the current time with a ±300
+  second tolerance (also required by the Standard Webhooks spec, missed in
+  the original Task 10 draft and added during code review): after the
+  header-presence check but before the signature is computed, a
+  missing/non-numeric/out-of-tolerance timestamp is rejected with `400`.
+  An empty `Webhook Secret` is also explicitly rejected (an empty HMAC key
+  would otherwise not throw and would produce a computable, forgeable
+  digest, rather than failing loudly).
 - Requests with an invalid signature respond `400` and do not trigger the
   workflow. Requests whose `type` isn't in the selected `Events` list still
   respond `200` (so Polar doesn't retry) but don't trigger the workflow —
