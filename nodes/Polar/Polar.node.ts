@@ -1,5 +1,6 @@
 import { NodeConnectionTypes, type INodeType, type INodeTypeDescription } from 'n8n-workflow';
 import { checkoutDescription } from './resources/checkout';
+import { checkoutLinkDescription } from './resources/checkoutLink';
 import { getProducts } from './listSearch/getProducts';
 import { getCustomers } from './listSearch/getCustomers';
 import { getProductOptions } from './loadOptions/getProductOptions';
@@ -39,10 +40,14 @@ export class Polar implements INodeType {
 				name: 'resource',
 				type: 'options',
 				noDataExpression: true,
-				options: [{ name: 'Checkout', value: 'checkout' }],
+				options: [
+					{ name: 'Checkout', value: 'checkout' },
+					{ name: 'Checkout Link', value: 'checkoutLink' },
+				],
 				default: 'checkout',
 			},
 			...checkoutDescription,
+			...checkoutLinkDescription,
 		],
 	};
 
