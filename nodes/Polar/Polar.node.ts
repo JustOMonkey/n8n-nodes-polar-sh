@@ -1,4 +1,6 @@
 import { NodeConnectionTypes, type INodeType, type INodeTypeDescription } from 'n8n-workflow';
+import { benefitDescription } from './resources/benefit';
+import { benefitGrantDescription } from './resources/benefitGrant';
 import { checkoutDescription } from './resources/checkout';
 import { checkoutLinkDescription } from './resources/checkoutLink';
 import { customerDescription } from './resources/customer';
@@ -7,7 +9,9 @@ import { subscriptionDescription } from './resources/subscription';
 import { refundDescription } from './resources/refund';
 import { getProducts } from './listSearch/getProducts';
 import { getCustomers } from './listSearch/getCustomers';
+import { getBenefits } from './listSearch/getBenefits';
 import { getProductOptions } from './loadOptions/getProductOptions';
+import { getBenefitOptions } from './loadOptions/getBenefitOptions';
 
 export class Polar implements INodeType {
 	description: INodeTypeDescription = {
@@ -45,6 +49,8 @@ export class Polar implements INodeType {
 				type: 'options',
 				noDataExpression: true,
 				options: [
+					{ name: 'Benefit', value: 'benefit' },
+					{ name: 'Benefit Grant', value: 'benefitGrant' },
 					{ name: 'Checkout', value: 'checkout' },
 					{ name: 'Checkout Link', value: 'checkoutLink' },
 					{ name: 'Customer', value: 'customer' },
@@ -54,6 +60,8 @@ export class Polar implements INodeType {
 				],
 				default: 'checkout',
 			},
+			...benefitDescription,
+			...benefitGrantDescription,
 			...checkoutDescription,
 			...checkoutLinkDescription,
 			...customerDescription,
@@ -67,9 +75,11 @@ export class Polar implements INodeType {
 		listSearch: {
 			getProducts,
 			getCustomers,
+			getBenefits,
 		},
 		loadOptions: {
 			getProductOptions,
+			getBenefitOptions,
 		},
 	};
 }
