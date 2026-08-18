@@ -33,7 +33,7 @@ function buildPricesArray(v: PriceGroupValue) {
 		amount_type: 'custom',
 		price_currency: p.currency,
 		tax_behavior: p.tax_behavior || undefined,
-		minimum_amount: p.minimum_amount || undefined,
+		minimum_amount: p.minimum_amount,
 		maximum_amount: p.maximum_amount || undefined,
 		preset_amount: p.preset_amount || undefined,
 	}));

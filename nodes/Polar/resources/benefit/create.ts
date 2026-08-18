@@ -9,7 +9,7 @@ const showDownloadables = { ...show, benefitType: ['downloadables'] };
 const showLicenseKeys = { ...show, benefitType: ['license_keys'] };
 const showMeterCredit = { ...show, benefitType: ['meter_credit'] };
 const showSlack = { ...show, benefitType: ['slack_shared_channel'] };
-// 'feature_flag' has no type-specific fields at all — the API's properties object is empty for it.
+const showFeatureFlag = { ...show, benefitType: ['feature_flag'] };
 
 export const benefitCreateDescription: INodeProperties[] = [
 	{
@@ -292,7 +292,7 @@ export const benefitCreateDescription: INodeProperties[] = [
 		default: {},
 		displayOptions: { show: showSlack },
 		options: [
-			{ displayName: 'Private Channel', name: 'private', type: 'boolean', default: false },
+			{ displayName: 'Private Channel', name: 'private', type: 'boolean', default: true },
 			{ displayName: 'Welcome Message', name: 'welcome_message', type: 'string', default: '' },
 			{ displayName: 'Archive Channel on Revoke', name: 'archive_on_revoke', type: 'boolean', default: true },
 			{
@@ -328,6 +328,20 @@ export const benefitCreateDescription: INodeProperties[] = [
 					}
 					return properties;
 				})() }}`,
+			},
+		},
+	},
+	{
+		displayName: 'Feature Flag Properties',
+		name: 'featureFlagProperties',
+		type: 'hidden',
+		default: {},
+		displayOptions: { show: showFeatureFlag },
+		routing: {
+			send: {
+				type: 'body',
+				property: 'properties',
+				value: '={{ ({}) }}',
 			},
 		},
 	},

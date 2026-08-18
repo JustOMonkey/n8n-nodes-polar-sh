@@ -2,7 +2,7 @@ import type { INodeProperties } from 'n8n-workflow';
 import { metadataField } from '../../shared/descriptions';
 
 const show = { resource: ['benefit'], operation: ['update'] };
-const showVisibility = { ...show, benefitType: ['custom', 'downloadables', 'license_keys', 'meter_credit', 'feature_flag'] };
+const showVisibility = { ...show, benefitType: ['custom', 'license_keys', 'meter_credit', 'feature_flag'] };
 const showCustom = { ...show, benefitType: ['custom'] };
 const showDiscord = { ...show, benefitType: ['discord'] };
 const showGitHub = { ...show, benefitType: ['github_repository'] };
@@ -53,13 +53,14 @@ export const benefitUpdateDescription: INodeProperties[] = [
 		name: 'visibility',
 		type: 'options',
 		options: [
+			{ name: 'Do Not Change', value: '' },
 			{ name: 'Draft', value: 'draft' },
 			{ name: 'Private', value: 'private' },
 			{ name: 'Public', value: 'public' },
 		],
-		default: 'public',
+		default: '',
 		displayOptions: { show: showVisibility },
-		routing: { send: { type: 'body', property: 'visibility' } },
+		routing: { send: { type: 'body', property: 'visibility', value: '={{$value || undefined}}' } },
 	},
 	metadataField('metadata', 'metadata', 'Metadata', show),
 	{
@@ -163,7 +164,7 @@ export const benefitUpdateDescription: INodeProperties[] = [
 			send: {
 				type: 'body',
 				property: 'properties',
-				value: '={{ { files: ($value.file || []).map((f) => f.id) } }}',
+				value: '={{ ($value.file && $value.file.length) ? { files: $value.file.map((f) => f.id) } : undefined }}',
 			},
 		},
 	},
@@ -216,7 +217,7 @@ export const benefitUpdateDescription: INodeProperties[] = [
 						};
 					}
 					if (v.limit_usage) properties.limit_usage = v.limit_usage;
-					return properties;
+					return Object.keys(properties).length ? properties : undefined;
 				})() }}`,
 			},
 		},
@@ -276,9 +277,10 @@ export const benefitUpdateDescription: INodeProperties[] = [
 		type: 'collection',
 		placeholder: 'Add Field',
 		default: {},
+		description: 'Polar replaces the full properties object on update — any of these fields left unset here will revert to their Polar default (Private Channel: true, Archive Channel on Revoke: true) rather than keeping their current value',
 		displayOptions: { show: showSlack },
 		options: [
-			{ displayName: 'Private Channel', name: 'private', type: 'boolean', default: false },
+			{ displayName: 'Private Channel', name: 'private', type: 'boolean', default: true },
 			{ displayName: 'Welcome Message', name: 'welcome_message', type: 'string', default: '' },
 			{ displayName: 'Archive Channel on Revoke', name: 'archive_on_revoke', type: 'boolean', default: true },
 			{

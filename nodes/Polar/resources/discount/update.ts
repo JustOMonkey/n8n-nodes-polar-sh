@@ -106,13 +106,6 @@ export const discountUpdateDescription: INodeProperties[] = [
 				routing: { request: { body: { max_redemptions: '={{$value}}' } } },
 			},
 			{
-				displayName: 'Max Redemptions Per Customer',
-				name: 'max_redemptions_per_customer',
-				type: 'number',
-				default: 1,
-				routing: { request: { body: { max_redemptions_per_customer: '={{$value}}' } } },
-			},
-			{
 				displayName: 'Name',
 				name: 'name',
 				type: 'string',
