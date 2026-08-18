@@ -125,9 +125,9 @@ export class PolarTrigger implements INodeType {
 				displayName: 'Path',
 				name: 'path',
 				type: 'string',
-				default: 'webhook',
+				default: '',
 				placeholder: 'webhook',
-				description: 'The webhook path that triggers this workflow. Change this if you need multiple Polar Trigger nodes with distinct URLs, or to match a specific path already registered in the Polar dashboard.',
+				description: "The webhook path that triggers this workflow. Leave empty to use this node's automatically-generated unique ID (matches the default behavior of n8n's core Webhook node); set your own value if you need a specific, predictable path.",
 			},
 			{
 				displayName: 'Allow Multiple Events',
