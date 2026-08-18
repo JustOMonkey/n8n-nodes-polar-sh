@@ -1,6 +1,5 @@
 import { createHmac, timingSafeEqual } from 'crypto';
 import {
-	NodeConnectionTypes,
 	type IDataObject,
 	type IHookFunctions,
 	type INodeType,
@@ -46,6 +45,18 @@ const POLAR_EVENTS = [
 	'organization.updated',
 ] as const;
 
+// Embedded into the `outputs` expression below via `.toString()` — the same technique
+// this package's declarative routing already uses for `nextPageInfo`/`buildPricesArray`.
+// n8n evaluates `outputs` expressions in an isolated context with only `$parameter`
+// available, so this function must be fully self-contained (no closures, no imports).
+function configuredOutputs(parameters: { events?: string | string[] }) {
+	const events = parameters.events;
+	if (!Array.isArray(events)) {
+		return [{ type: 'main', displayName: events }];
+	}
+	return events.map((event) => ({ type: 'main', displayName: event }));
+}
+
 function resolveSigningKey(secret: string): Buffer {
 	// Standard Webhooks providers serialize the key as `whsec_<base64>`. Polar does
 	// not: its dashboard secret is an arbitrary UTF-8 string used directly as the
@@ -89,30 +100,57 @@ export class PolarTrigger implements INodeType {
 		icon: { light: 'file:../../icons/polar.svg', dark: 'file:../../icons/polar.dark.svg' },
 		group: ['trigger'],
 		version: 1,
-		subtitle: '={{$parameter["events"].join(", ")}}',
+		subtitle: '={{ Array.isArray($parameter["events"]) ? $parameter["events"].join(", ") : $parameter["events"] }}',
 		description: 'Starts the workflow when a Polar.sh webhook event is received',
 		defaults: {
 			name: 'Polar Trigger',
 		},
 		inputs: [],
-		outputs: [NodeConnectionTypes.Main],
+		outputs: `={{(${configuredOutputs.toString()})($parameter)}}`,
 		webhooks: [
 			{
 				name: 'default',
 				httpMethod: 'POST',
 				responseMode: 'onReceived',
-				path: 'webhook',
+				path: '={{$parameter["path"]}}',
 			},
 		],
 		properties: [
+			{
+				displayName: 'Path',
+				name: 'path',
+				type: 'string',
+				default: 'webhook',
+				placeholder: 'webhook',
+				description: 'The webhook path that triggers this workflow. Change this if you need multiple Polar Trigger nodes with distinct URLs, or to match a specific path already registered in the Polar dashboard.',
+			},
+			{
+				displayName: 'Allow Multiple Events',
+				name: 'multipleEvents',
+				type: 'boolean',
+				default: false,
+				isNodeSetting: true,
+				description: 'Whether to listen for multiple Polar event types, each routed to its own output',
+			},
+			{
+				displayName: 'Event',
+				name: 'events',
+				type: 'options',
+				required: true,
+				default: 'checkout.created',
+				displayOptions: { show: { multipleEvents: [false] } },
+				options: POLAR_EVENTS.map((event) => ({ name: event, value: event })),
+				description: 'Only this event type will trigger the workflow. Create a webhook endpoint for this event in the Polar dashboard, pointed at this node\'s webhook URL.',
+			},
 			{
 				displayName: 'Events',
 				name: 'events',
 				type: 'multiOptions',
 				required: true,
 				default: [],
+				displayOptions: { show: { multipleEvents: [true] } },
 				options: POLAR_EVENTS.map((event) => ({ name: event, value: event })),
-				description: 'Only these event types will trigger the workflow. Create a webhook endpoint for these events in the Polar dashboard, pointed at this node\'s webhook URL.',
+				description: 'Only these event types will trigger the workflow, each routed to its own output in the order selected. Create a webhook endpoint for these events in the Polar dashboard, pointed at this node\'s webhook URL.',
 			},
 			{
 				displayName: 'Webhook Secret',
@@ -191,14 +229,22 @@ export class PolarTrigger implements INodeType {
 			return { noWebhookResponse: true };
 		}
 
-		const selectedEvents = this.getNodeParameter('events') as string[];
-		if (!payload.type || !selectedEvents.includes(payload.type)) {
+		// `events` is a single string when "Allow Multiple Events" is off, or an array when
+		// it's on — one output per selected event, matching `configuredOutputs` above.
+		const events = this.getNodeParameter('events') as string | string[];
+		const eventList = Array.isArray(events) ? events : [events];
+		const outputIndex = payload.type ? eventList.indexOf(payload.type) : -1;
+
+		if (outputIndex === -1) {
 			res.status(200).json({ message: 'Event type not selected on this trigger, ignored' });
 			return { noWebhookResponse: true };
 		}
 
+		const outputs: IDataObject[][] = eventList.map(() => []);
+		outputs[outputIndex] = [payload as unknown as IDataObject];
+
 		return {
-			workflowData: [this.helpers.returnJsonArray([payload as unknown as IDataObject])],
+			workflowData: outputs.map((items) => this.helpers.returnJsonArray(items)),
 		};
 	}
 }
