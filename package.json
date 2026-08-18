@@ -1,19 +1,23 @@
 {
-	"name": "n8n-nodes-<...>",
+	"name": "n8n-nodes-polar-sh",
 	"version": "0.1.0",
-	"description": "",
+	"description": "n8n community node to manage Polar.sh (checkouts, orders, subscriptions, customers, benefits and more) directly from n8n workflows.",
 	"license": "MIT",
-	"homepage": "",
+	"homepage": "https://github.com/JUSTONEMONKEY/n8n-nodes-polar-sh",
 	"keywords": [
-		"n8n-community-node-package"
+		"n8n-community-node-package",
+		"polar",
+		"polar.sh",
+		"billing",
+		"payments"
 	],
 	"author": {
-		"name": "",
-		"email": ""
+		"name": "JUSTONEMONKEY",
+		"email": "contact@justonemonkey.space"
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/<...>/n8n-nodes-<...>.git"
+		"url": "https://github.com/JUSTONEMONKEY/n8n-nodes-polar-sh.git"
 	},
 	"scripts": {
 		"build": "n8n-node build",
@@ -31,17 +35,16 @@
 		"n8nNodesApiVersion": 1,
 		"strict": true,
 		"credentials": [
-			"dist/credentials/GithubIssuesApi.credentials.js",
-			"dist/credentials/GithubIssuesOAuth2Api.credentials.js"
+			"dist/credentials/PolarApi.credentials.js"
 		],
 		"nodes": [
-			"dist/nodes/GithubIssues/GithubIssues.node.js",
-			"dist/nodes/Example/Example.node.js"
+			"dist/nodes/Polar/Polar.node.js",
+			"dist/nodes/PolarTrigger/PolarTrigger.node.js"
 		]
 	},
 	"devDependencies": {
 		"@n8n/node-cli": "*",
-		"eslint": "9.39.4",
+		"eslint": "9.29.0",
 		"prettier": "3.8.3",
 		"release-it": "20.2.0",
 		"typescript": "5.9.3"
