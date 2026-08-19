@@ -30,14 +30,18 @@ Resource + Operation node covering:
 - **Custom Field** — Create, Delete, Get, Get Many, Update — org-defined extra data fields (text/number/date/checkbox/select) collected on checkout
 - **Customer** — Get Many, Get, Get by External ID, Create, Update, Update by External ID, Delete, Delete by External ID, Get State, Get State by External ID, Get Payment Methods
 - **Customer Meter** — Get Many, Get
+- **Customer Seat** — Assign Seat, Claim Seat, Get Claim Info, Get Many, Resend Invitation, Revoke Seat — assign, revoke, and manage seat-based subscription/order member seats; Get Claim Info and Claim Seat require no Polar authentication (they're for the invited person's own client)
+- **Customer Session** — Create — generate a one-time customer portal access token
 - **Discount** — Get Many, Get, Create, Update, Delete
 - **Dispute** — Get, Get Many — read-only view of payment disputes/chargebacks
 - **Event** — Get Many, Get, Ingest, List Names
 - **Event Type** — Get Many, Update
 - **File** — Complete Upload, Create, Delete, Get Many, Update — declarative primitives for Polar's S3 multipart file upload flow (Create returns presigned upload URLs; actually PUTing file bytes to S3 is done in your own workflow, e.g. with an HTTP Request node, before calling Complete Upload)
 - **License Key** — Activate, Deactivate, Get, Get Activation, Get Many, Update, Validate — license-gated software activation and validation
+- **Member** — Create, Delete, Get, Get By External ID, Get Many, Update — manage individual people within a B2B customer (requires the organization's member-management feature)
 - **Meter** — Create, Get, Get Many, Get Quantities, Update
 - **Order** — Get Many, Get, Create, Update, Finalize, Generate Invoice, Get Invoice, Get Receipt
+- **Organization Access Token** — Create, Delete, Get Many, Update — manage the org-scoped API tokens themselves (the same kind of token this package's own credential uses). The raw token value is only returned once, at creation.
 - **Product** — Get Many, Get, Create, Update, Update Benefits
 - **Refund** — Get Many, Create
 - **Subscription** — Get Many, Get, Create, Update, Update Seats, Update Billing Period, Cancel, Revoke, Pause, Resume, Clear Pending Update
