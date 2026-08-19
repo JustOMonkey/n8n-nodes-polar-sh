@@ -27,11 +27,15 @@ Resource + Operation node covering:
 - **Benefit Grant** — Get Many
 - **Checkout** — Get Many, Get, Create, Update
 - **Checkout Link** — Get Many, Get, Create, Update, Delete
+- **Custom Field** — Create, Delete, Get, Get Many, Update — org-defined extra data fields (text/number/date/checkbox/select) collected on checkout
 - **Customer** — Get Many, Get, Get by External ID, Create, Update, Update by External ID, Delete, Delete by External ID, Get State, Get State by External ID, Get Payment Methods
 - **Customer Meter** — Get Many, Get
 - **Discount** — Get Many, Get, Create, Update, Delete
+- **Dispute** — Get, Get Many — read-only view of payment disputes/chargebacks
 - **Event** — Get Many, Get, Ingest, List Names
 - **Event Type** — Get Many, Update
+- **File** — Complete Upload, Create, Delete, Get Many, Update — declarative primitives for Polar's S3 multipart file upload flow (Create returns presigned upload URLs; actually PUTing file bytes to S3 is done in your own workflow, e.g. with an HTTP Request node, before calling Complete Upload)
+- **License Key** — Activate, Deactivate, Get, Get Activation, Get Many, Update, Validate — license-gated software activation and validation
 - **Meter** — Create, Get, Get Many, Get Quantities, Update
 - **Order** — Get Many, Get, Create, Update, Finalize, Generate Invoice, Get Invoice, Get Receipt
 - **Product** — Get Many, Get, Create, Update, Update Benefits
