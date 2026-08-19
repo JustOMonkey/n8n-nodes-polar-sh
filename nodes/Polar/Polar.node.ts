@@ -7,6 +7,7 @@ import { customFieldDescription } from './resources/customField';
 import { customerDescription } from './resources/customer';
 import { customerMeterDescription } from './resources/customerMeter';
 import { customerSeatDescription } from './resources/customerSeat';
+import { customerSessionDescription } from './resources/customerSession';
 import { discountDescription } from './resources/discount';
 import { disputeDescription } from './resources/dispute';
 import { eventDescription } from './resources/event';
@@ -68,6 +69,7 @@ export class Polar implements INodeType {
 					{ name: 'Customer', value: 'customer' },
 					{ name: 'Customer Meter', value: 'customerMeter' },
 					{ name: 'Customer Seat', value: 'customerSeat' },
+					{ name: 'Customer Session', value: 'customerSession' },
 					{ name: 'Discount', value: 'discount' },
 					{ name: 'Dispute', value: 'dispute' },
 					{ name: 'Event', value: 'event' },
@@ -90,6 +92,7 @@ export class Polar implements INodeType {
 			...customerDescription,
 			...customerMeterDescription,
 			...customerSeatDescription,
+			...customerSessionDescription,
 			...discountDescription,
 			...disputeDescription,
 			...eventDescription,
