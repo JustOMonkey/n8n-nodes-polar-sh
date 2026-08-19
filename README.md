@@ -23,16 +23,20 @@ Follow the [installation guide](https://docs.n8n.io/integrations/community-nodes
 
 Resource + Operation node covering:
 
+- **Benefit** — Get Many, Get, Create, Update, Delete, Get Grants
+- **Benefit Grant** — Get Many
 - **Checkout** — Get Many, Get, Create, Update
 - **Checkout Link** — Get Many, Get, Create, Update, Delete
 - **Customer** — Get Many, Get, Get by External ID, Create, Update, Update by External ID, Delete, Delete by External ID, Get State, Get State by External ID, Get Payment Methods
-- **Order** — Get Many, Get, Create, Update, Finalize, Generate Invoice, Get Invoice, Get Receipt
-- **Subscription** — Get Many, Get, Create, Update, Update Seats, Update Billing Period, Cancel, Revoke, Pause, Resume, Clear Pending Update
-- **Refund** — Get Many, Create
-- **Benefit** — Get Many, Get, Create, Update, Delete, Get Grants
-- **Benefit Grant** — Get Many
+- **Customer Meter** — Get Many, Get
 - **Discount** — Get Many, Get, Create, Update, Delete
+- **Event** — Get Many, Get, Ingest, List Names
+- **Event Type** — Get Many, Update
+- **Meter** — Create, Get, Get Many, Get Quantities, Update
+- **Order** — Get Many, Get, Create, Update, Finalize, Generate Invoice, Get Invoice, Get Receipt
 - **Product** — Get Many, Get, Create, Update, Update Benefits
+- **Refund** — Get Many, Create
+- **Subscription** — Get Many, Get, Create, Update, Update Seats, Update Billing Period, Cancel, Revoke, Pause, Resume, Clear Pending Update
 
 ### Polar Trigger
 
