@@ -38,7 +38,7 @@ export const memberDescription: INodeProperties[] = [
 				routing: { request: { method: 'GET', url: '=/members/{{$parameter["memberId"]}}' } },
 			},
 			{
-				name: 'Get By External ID',
+				name: 'Get by External ID',
 				value: 'getByExternalId',
 				action: 'Get a member by external ID',
 				description: 'Get a single member by its external ID',

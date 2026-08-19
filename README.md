@@ -38,7 +38,7 @@ Resource + Operation node covering:
 - **Event Type** — Get Many, Update
 - **File** — Complete Upload, Create, Delete, Get Many, Update — declarative primitives for Polar's S3 multipart file upload flow (Create returns presigned upload URLs; actually PUTing file bytes to S3 is done in your own workflow, e.g. with an HTTP Request node, before calling Complete Upload)
 - **License Key** — Activate, Deactivate, Get, Get Activation, Get Many, Update, Validate — license-gated software activation and validation
-- **Member** — Create, Delete, Get, Get By External ID, Get Many, Update — manage individual people within a B2B customer (requires the organization's member-management feature)
+- **Member** — Create, Delete, Get, Get by External ID, Get Many, Update — manage individual people within a B2B customer (requires the organization's member-management feature)
 - **Meter** — Create, Get, Get Many, Get Quantities, Update
 - **Order** — Get Many, Get, Create, Update, Finalize, Generate Invoice, Get Invoice, Get Receipt
 - **Organization Access Token** — Create, Delete, Get Many, Update — manage the org-scoped API tokens themselves (the same kind of token this package's own credential uses). The raw token value is only returned once, at creation.

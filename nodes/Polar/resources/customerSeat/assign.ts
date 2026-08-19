@@ -9,8 +9,7 @@ export const customerSeatAssignDescription: INodeProperties[] = [
 		type: 'string',
 		default: '',
 		displayOptions: { show },
-		description:
-			'The subscription to assign a seat from (for recurring seats). Provide this, or Order ID, or Checkout ID.',
+		description: 'The subscription to assign a seat from (for recurring seats). Exactly one of Subscription ID / Order ID is required.',
 		routing: { send: { type: 'body', property: 'subscription_id', value: '={{ $value || undefined }}' } },
 	},
 	{
@@ -19,19 +18,8 @@ export const customerSeatAssignDescription: INodeProperties[] = [
 		type: 'string',
 		default: '',
 		displayOptions: { show },
-		description:
-			'The order to assign a seat from (for one-time purchase seats). Provide this, or Subscription ID, or Checkout ID.',
+		description: 'The order to assign a seat from (for one-time purchase seats). Exactly one of Subscription ID / Order ID is required.',
 		routing: { send: { type: 'body', property: 'order_id', value: '={{ $value || undefined }}' } },
-	},
-	{
-		displayName: 'Checkout ID',
-		name: 'checkoutId',
-		type: 'string',
-		default: '',
-		displayOptions: { show },
-		description:
-			'Resolves to the subscription or order produced by this checkout. Provide this, or Subscription ID, or Order ID.',
-		routing: { send: { type: 'body', property: 'checkout_id', value: '={{ $value || undefined }}' } },
 	},
 	{
 		displayName: 'Email',
