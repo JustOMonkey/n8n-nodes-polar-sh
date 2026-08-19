@@ -1,0 +1,103 @@
+import type { INodeProperties } from 'n8n-workflow';
+
+const show = { resource: ['customerSeat'], operation: ['assign'] };
+
+export const customerSeatAssignDescription: INodeProperties[] = [
+	{
+		displayName: 'Subscription ID',
+		name: 'subscriptionId',
+		type: 'string',
+		default: '',
+		displayOptions: { show },
+		description:
+			'The subscription to assign a seat from (for recurring seats). Provide this, or Order ID, or Checkout ID.',
+		routing: { send: { type: 'body', property: 'subscription_id', value: '={{ $value || undefined }}' } },
+	},
+	{
+		displayName: 'Order ID',
+		name: 'orderId',
+		type: 'string',
+		default: '',
+		displayOptions: { show },
+		description:
+			'The order to assign a seat from (for one-time purchase seats). Provide this, or Subscription ID, or Checkout ID.',
+		routing: { send: { type: 'body', property: 'order_id', value: '={{ $value || undefined }}' } },
+	},
+	{
+		displayName: 'Checkout ID',
+		name: 'checkoutId',
+		type: 'string',
+		default: '',
+		displayOptions: { show },
+		description:
+			'Resolves to the subscription or order produced by this checkout. Provide this, or Subscription ID, or Order ID.',
+		routing: { send: { type: 'body', property: 'checkout_id', value: '={{ $value || undefined }}' } },
+	},
+	{
+		displayName: 'Email',
+		name: 'email',
+		type: 'string',
+		default: '',
+		placeholder: 'name@email.com',
+		displayOptions: { show },
+		description:
+			'Email of the customer to assign the seat to. Provide this and/or one of the ID fields below to identify the recipient.',
+		routing: { send: { type: 'body', property: 'email', value: '={{ $value || undefined }}' } },
+	},
+	{
+		displayName: 'Customer ID',
+		name: 'customerId',
+		type: 'string',
+		default: '',
+		displayOptions: { show },
+		description: 'Customer ID for the seat assignment',
+		routing: { send: { type: 'body', property: 'customer_id', value: '={{ $value || undefined }}' } },
+	},
+	{
+		displayName: 'External Customer ID',
+		name: 'externalCustomerId',
+		type: 'string',
+		default: '',
+		displayOptions: { show },
+		description: 'External customer ID for the seat assignment',
+		routing: { send: { type: 'body', property: 'external_customer_id', value: '={{ $value || undefined }}' } },
+	},
+	{
+		displayName: 'Member ID',
+		name: 'memberId',
+		type: 'string',
+		default: '',
+		displayOptions: { show },
+		description: 'Member ID for the seat assignment',
+		routing: { send: { type: 'body', property: 'member_id', value: '={{ $value || undefined }}' } },
+	},
+	{
+		displayName: 'External Member ID',
+		name: 'externalMemberId',
+		type: 'string',
+		default: '',
+		displayOptions: { show },
+		description:
+			'Can be used alone (look up an existing member) or together with Email (create/validate a new member)',
+		routing: { send: { type: 'body', property: 'external_member_id', value: '={{ $value || undefined }}' } },
+	},
+	{
+		displayName: 'Immediate Claim',
+		name: 'immediateClaim',
+		type: 'boolean',
+		default: false,
+		displayOptions: { show },
+		description: 'Whether to immediately claim the seat without sending an invitation email (API-only feature)',
+		routing: { send: { type: 'body', property: 'immediate_claim' } },
+	},
+	{
+		displayName: 'Metadata (JSON)',
+		name: 'metadataJson',
+		type: 'string',
+		typeOptions: { rows: 4 },
+		default: '',
+		displayOptions: { show },
+		description: 'Additional metadata for the seat, as a JSON object (max 10 keys, 1KB total)',
+		routing: { send: { type: 'body', property: 'metadata', value: '={{ $value ? JSON.parse($value) : undefined }}' } },
+	},
+];
