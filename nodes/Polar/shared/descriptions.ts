@@ -125,6 +125,42 @@ export function metadataField(
 	};
 }
 
+export function typedMetadataField(
+	fieldName: string,
+	bodyProperty: string,
+	displayName: string,
+	show: ShowCondition,
+): INodeProperties {
+	return {
+		displayName,
+		name: fieldName,
+		type: 'fixedCollection',
+		typeOptions: { multipleValues: true, multipleValueButtonText: 'Add Field' },
+		default: {},
+		displayOptions: { show },
+		description:
+			'Key-value pairs to store additional information (max 50 pairs, key max 40 characters, string value max 500 characters). Values are stored as text by default; use a number- or boolean-looking value to store it as a real number or boolean.',
+		options: [
+			{
+				displayName: 'Field',
+				name: 'field',
+				values: [
+					{ displayName: 'Key', name: 'key', type: 'string', default: '' },
+					{ displayName: 'Value', name: 'value', type: 'string', default: '' },
+				],
+			},
+		],
+		routing: {
+			send: {
+				type: 'body',
+				property: bodyProperty,
+				value:
+					'={{ $value.field && $value.field.length ? Object.fromEntries($value.field.map((f) => [f.key, (f.value === "true" ? true : (f.value === "false" ? false : (f.value !== "" && !isNaN(Number(f.value)) ? Number(f.value) : f.value)))])) : undefined }}',
+			},
+		},
+	};
+}
+
 export function paginationProperties(show: ShowCondition): INodeProperties[] {
 	return [
 		{

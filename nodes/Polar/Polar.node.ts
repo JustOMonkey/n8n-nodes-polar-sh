@@ -3,6 +3,7 @@ import { benefitDescription } from './resources/benefit';
 import { benefitGrantDescription } from './resources/benefitGrant';
 import { checkoutDescription } from './resources/checkout';
 import { checkoutLinkDescription } from './resources/checkoutLink';
+import { customFieldDescription } from './resources/customField';
 import { customerDescription } from './resources/customer';
 import { customerMeterDescription } from './resources/customerMeter';
 import { discountDescription } from './resources/discount';
@@ -60,6 +61,7 @@ export class Polar implements INodeType {
 					{ name: 'Benefit Grant', value: 'benefitGrant' },
 					{ name: 'Checkout', value: 'checkout' },
 					{ name: 'Checkout Link', value: 'checkoutLink' },
+					{ name: 'Custom Field', value: 'customField' },
 					{ name: 'Customer', value: 'customer' },
 					{ name: 'Customer Meter', value: 'customerMeter' },
 					{ name: 'Discount', value: 'discount' },
@@ -78,6 +80,7 @@ export class Polar implements INodeType {
 			...benefitGrantDescription,
 			...checkoutDescription,
 			...checkoutLinkDescription,
+			...customFieldDescription,
 			...customerDescription,
 			...customerMeterDescription,
 			...discountDescription,
