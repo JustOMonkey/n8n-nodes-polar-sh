@@ -46,7 +46,7 @@ export const meterCreateDescription: INodeProperties[] = [
 		name: 'customMultiplier',
 		type: 'number',
 		default: 1,
-		typeOptions: { minValue: 1 },
+		typeOptions: { minValue: 1, numberPrecision: 0 },
 		displayOptions: { show: showCustomUnit },
 		description: 'The multiplier to convert from the base unit to display scale, e.g. 1000 to display per 1000 units',
 		routing: { send: { type: 'body', property: 'custom_multiplier' } },
@@ -125,7 +125,7 @@ export const meterCreateDescription: INodeProperties[] = [
 				type: 'body',
 				property: 'filter',
 				value:
-					'={{ $value ? JSON.parse($value) : { conjunction: $parameter["filterConjunction"], clauses: ($parameter["filterClauses"].clause || []).map((c) => ({ property: c.property, operator: c.operator, value: c.value })) } }}',
+					'={{ $value ? JSON.parse($value) : { conjunction: $parameter["filterConjunction"], clauses: ($parameter["filterClauses"].clause || []).map((c) => ({ property: c.property, operator: c.operator, value: (c.value === "true" ? true : (c.value === "false" ? false : (c.value !== "" && !isNaN(Number(c.value)) ? Number(c.value) : c.value))) })) } }}',
 			},
 		},
 	},

@@ -10,6 +10,7 @@ type IngestEventEntry = {
 	externalId?: string;
 	parentId?: string;
 	memberId?: string;
+	externalMemberId?: string;
 	metadata?: { field?: Array<{ key: string; value: string }> };
 };
 
@@ -18,13 +19,14 @@ function buildEventsArray(entries: IngestEventEntry[]) {
 		const event: Record<string, unknown> = { name: e.name };
 		if (e.customerId) {
 			event.customer_id = e.customerId;
+			if (e.memberId) event.member_id = e.memberId;
 		} else if (e.externalCustomerId) {
 			event.external_customer_id = e.externalCustomerId;
+			if (e.externalMemberId) event.external_member_id = e.externalMemberId;
 		}
 		if (e.timestamp) event.timestamp = e.timestamp;
 		if (e.externalId) event.external_id = e.externalId;
 		if (e.parentId) event.parent_id = e.parentId;
-		if (e.memberId) event.member_id = e.memberId;
 		if (e.metadata && e.metadata.field && e.metadata.field.length) {
 			event.metadata = Object.fromEntries(e.metadata.field.map((f) => [f.key, f.value]));
 		}
@@ -56,6 +58,14 @@ export const eventIngestDescription: INodeProperties[] = [
 						type: 'string',
 						default: '',
 						description: 'Your own unique identifier for this event, useful for deduplication',
+					},
+					{
+						displayName: 'External Member ID',
+						name: 'externalMemberId',
+						type: 'string',
+						default: '',
+						description:
+							"ID of the member within the customer's organization who performed the action (B2B attribution). Only applies alongside External Customer ID.",
 					},
 					{
 						displayName: 'Member ID',
