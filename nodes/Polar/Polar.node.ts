@@ -6,6 +6,7 @@ import { checkoutLinkDescription } from './resources/checkoutLink';
 import { customerDescription } from './resources/customer';
 import { discountDescription } from './resources/discount';
 import { orderDescription } from './resources/order';
+import { meterDescription } from './resources/meter';
 import { productDescription } from './resources/product';
 import { subscriptionDescription } from './resources/subscription';
 import { refundDescription } from './resources/refund';
@@ -57,6 +58,7 @@ export class Polar implements INodeType {
 					{ name: 'Checkout Link', value: 'checkoutLink' },
 					{ name: 'Customer', value: 'customer' },
 					{ name: 'Discount', value: 'discount' },
+					{ name: 'Meter', value: 'meter' },
 					{ name: 'Order', value: 'order' },
 					{ name: 'Product', value: 'product' },
 					{ name: 'Refund', value: 'refund' },
@@ -70,6 +72,7 @@ export class Polar implements INodeType {
 			...checkoutLinkDescription,
 			...customerDescription,
 			...discountDescription,
+			...meterDescription,
 			...orderDescription,
 			...productDescription,
 			...subscriptionDescription,
