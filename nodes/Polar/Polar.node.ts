@@ -15,8 +15,8 @@ import { licenseKeyDescription } from './resources/licenseKey';
 import { meterDescription } from './resources/meter';
 import { orderDescription } from './resources/order';
 import { productDescription } from './resources/product';
-import { subscriptionDescription } from './resources/subscription';
 import { refundDescription } from './resources/refund';
+import { subscriptionDescription } from './resources/subscription';
 import { getProducts } from './listSearch/getProducts';
 import { getCustomers } from './listSearch/getCustomers';
 import { getBenefits } from './listSearch/getBenefits';
@@ -96,8 +96,8 @@ export class Polar implements INodeType {
 			...meterDescription,
 			...orderDescription,
 			...productDescription,
-			...subscriptionDescription,
 			...refundDescription,
+			...subscriptionDescription,
 		],
 	};
 

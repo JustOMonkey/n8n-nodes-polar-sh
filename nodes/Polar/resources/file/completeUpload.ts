@@ -9,11 +9,11 @@ type CompletedPartEntry = {
 };
 
 function buildCompletedParts(parts: CompletedPartEntry[]) {
-	return parts.map((p) => {
-		const part: Record<string, unknown> = { number: p.number, checksum_etag: p.checksumEtag };
-		if (p.checksumSha256Base64) part.checksum_sha256_base64 = p.checksumSha256Base64;
-		return part;
-	});
+	return parts.map((p) => ({
+		number: p.number,
+		checksum_etag: p.checksumEtag,
+		checksum_sha256_base64: p.checksumSha256Base64 || null,
+	}));
 }
 
 export const fileCompleteUploadDescription: INodeProperties[] = [
@@ -24,6 +24,7 @@ export const fileCompleteUploadDescription: INodeProperties[] = [
 		default: '',
 		required: true,
 		displayOptions: { show },
+		routing: { send: { type: 'body', property: 'id' } },
 	},
 	{
 		displayName: 'Path',

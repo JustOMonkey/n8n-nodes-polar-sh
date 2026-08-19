@@ -113,6 +113,8 @@ export const customFieldUpdateDescription: INodeProperties[] = [
 		placeholder: 'Add Property',
 		default: {},
 		displayOptions: { show: showSelect },
+		description:
+			"Polar requires Options to be re-supplied whenever any select property is sent, so changing a Form Label/Help Text/Placeholder alone (with Options left empty) is not possible — fill in Options below too, even if unchanged",
 		options: [
 			{ displayName: 'Form Help Text', name: 'form_help_text', type: 'string', default: '' },
 			{ displayName: 'Form Label', name: 'form_label', type: 'string', default: '' },
@@ -126,7 +128,8 @@ export const customFieldUpdateDescription: INodeProperties[] = [
 		typeOptions: { multipleValues: true, multipleValueButtonText: 'Add Option' },
 		default: {},
 		displayOptions: { show: showSelect },
-		description: 'Leave empty to keep the existing options unchanged. Adding any option replaces the entire list.',
+		description:
+			'Leave entirely empty (along with Select Properties above) to keep the existing select properties unchanged. Required, and must list the complete option set, whenever any select property is being changed — Polar has no partial-update for select options.',
 		options: [
 			{
 				displayName: 'Option',
@@ -149,7 +152,7 @@ export const customFieldUpdateDescription: INodeProperties[] = [
 				type: 'body',
 				property: 'properties',
 				value:
-					'={{ (function(details, options){ var result = Object.assign({}, details); if (options && options.length) { result.options = options; } return Object.keys(result).length ? result : undefined; })($parameter["propertiesSelectDetails"], ($parameter["customFieldSelectOptions"].option || []).map((o) => ({ value: o.value, label: o.label }))) }}',
+					'={{ (function(details, options){ if (!options || !options.length) { return undefined; } var result = Object.assign({}, details); result.options = options; return result; })($parameter["propertiesSelectDetails"], ($parameter["customFieldSelectOptions"].option || []).map((o) => ({ value: o.value, label: o.label }))) }}',
 			},
 		},
 	},
