@@ -4,8 +4,10 @@ import { benefitGrantDescription } from './resources/benefitGrant';
 import { checkoutDescription } from './resources/checkout';
 import { checkoutLinkDescription } from './resources/checkoutLink';
 import { customerDescription } from './resources/customer';
+import { customerMeterDescription } from './resources/customerMeter';
 import { discountDescription } from './resources/discount';
 import { eventDescription } from './resources/event';
+import { eventTypeDescription } from './resources/eventType';
 import { orderDescription } from './resources/order';
 import { meterDescription } from './resources/meter';
 import { productDescription } from './resources/product';
@@ -58,8 +60,10 @@ export class Polar implements INodeType {
 					{ name: 'Checkout', value: 'checkout' },
 					{ name: 'Checkout Link', value: 'checkoutLink' },
 					{ name: 'Customer', value: 'customer' },
+					{ name: 'Customer Meter', value: 'customerMeter' },
 					{ name: 'Discount', value: 'discount' },
 					{ name: 'Event', value: 'event' },
+					{ name: 'Event Type', value: 'eventType' },
 					{ name: 'Meter', value: 'meter' },
 					{ name: 'Order', value: 'order' },
 					{ name: 'Product', value: 'product' },
@@ -73,8 +77,10 @@ export class Polar implements INodeType {
 			...checkoutDescription,
 			...checkoutLinkDescription,
 			...customerDescription,
+			...customerMeterDescription,
 			...discountDescription,
 			...eventDescription,
+			...eventTypeDescription,
 			...meterDescription,
 			...orderDescription,
 			...productDescription,
