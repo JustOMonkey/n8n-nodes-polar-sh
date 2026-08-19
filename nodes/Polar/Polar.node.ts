@@ -10,6 +10,7 @@ import { discountDescription } from './resources/discount';
 import { disputeDescription } from './resources/dispute';
 import { eventDescription } from './resources/event';
 import { eventTypeDescription } from './resources/eventType';
+import { fileDescription } from './resources/file';
 import { licenseKeyDescription } from './resources/licenseKey';
 import { meterDescription } from './resources/meter';
 import { orderDescription } from './resources/order';
@@ -69,6 +70,7 @@ export class Polar implements INodeType {
 					{ name: 'Dispute', value: 'dispute' },
 					{ name: 'Event', value: 'event' },
 					{ name: 'Event Type', value: 'eventType' },
+					{ name: 'File', value: 'file' },
 					{ name: 'License Key', value: 'licenseKey' },
 					{ name: 'Meter', value: 'meter' },
 					{ name: 'Order', value: 'order' },
@@ -89,6 +91,7 @@ export class Polar implements INodeType {
 			...disputeDescription,
 			...eventDescription,
 			...eventTypeDescription,
+			...fileDescription,
 			...licenseKeyDescription,
 			...meterDescription,
 			...orderDescription,
