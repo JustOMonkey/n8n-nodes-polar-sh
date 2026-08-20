@@ -44,6 +44,17 @@ export const checkoutLinkCreateDescription: INodeProperties[] = [
 		displayOptions: { show: showMultipleProducts },
 		routing: { send: { type: 'body', property: 'products' } },
 	},
+	{
+		displayName: 'Payment Processor',
+		name: 'payment_processor',
+		type: 'options',
+		options: [{ name: 'Stripe', value: 'stripe' }],
+		default: 'stripe',
+		required: true,
+		displayOptions: { show },
+		description: 'Only Stripe is currently supported by the Polar API. This is required by the API on every checkout link.',
+		routing: { send: { type: 'body', property: 'payment_processor' } },
+	},
 	metadataField('metadata', 'metadata', 'Metadata', show),
 	{
 		displayName: 'Additional Fields',
@@ -73,15 +84,6 @@ export const checkoutLinkCreateDescription: INodeProperties[] = [
 				type: 'string',
 				default: '',
 				routing: { request: { body: { label: '={{$value}}' } } },
-			},
-			{
-				displayName: 'Payment Processor',
-				name: 'payment_processor',
-				type: 'options',
-				options: [{ name: 'Stripe', value: 'stripe' }],
-				default: 'stripe',
-				description: 'Only Stripe is currently supported by the Polar API',
-				routing: { request: { body: { payment_processor: '={{$value}}' } } },
 			},
 			{
 				displayName: 'Require Billing Address',
