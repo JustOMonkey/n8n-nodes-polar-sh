@@ -103,6 +103,8 @@ This node uses a **Polar API** credential:
 
 Requires n8n with the community nodes API version 1 (`n8nNodesApiVersion: 1`). Built and tested against Node.js v22+.
 
+Every field and endpoint in this package is grounded against Polar's live OpenAPI spec (https://polar.sh/docs/openapi.yaml), last verified 2026-08-20. Polar's API is versionless (everything lives under `/v1/`, evolving continuously) rather than pinned to discrete release numbers, so a verification date is the meaningful compatibility marker here, not a version string.
+
 ## Resources
 
 - [n8n community nodes documentation](https://docs.n8n.io/integrations/#community-nodes)
