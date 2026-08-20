@@ -15,7 +15,7 @@ This is an n8n community node package. It lets you manage [Polar.sh](https://pol
 
 ## Installation
 
-Follow the [installation guide](https://docs.n8n.io/integrations/community-nodes/installation/) in the n8n community nodes documentation, and install `n8n-nodes-polar-sh`.
+Follow the [installation guide](https://docs.n8n.io/integrations/community-nodes/installation/) in the n8n community nodes documentation, and install `@justonemonkey/n8n-nodes-polar-sh`.
 
 ## Nodes
 
