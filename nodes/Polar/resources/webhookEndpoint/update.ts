@@ -34,7 +34,7 @@ export const webhookEndpointUpdateDescription: INodeProperties[] = [
 				type: 'multiOptions',
 				options: webhookEventTypeOptions,
 				default: [],
-				description: 'Leave empty to keep the existing events unchanged',
+				description: 'The events that will trigger the webhook. Leave empty to keep the existing events unchanged.',
 				routing: { request: { body: { events: '={{ $value.length ? $value : undefined }}' } } },
 			},
 			{

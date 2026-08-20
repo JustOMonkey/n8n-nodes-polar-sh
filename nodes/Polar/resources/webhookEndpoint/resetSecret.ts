@@ -10,6 +10,6 @@ export const webhookEndpointResetSecretDescription: INodeProperties[] = [
 		default: '',
 		required: true,
 		displayOptions: { show },
-		description: 'Resetting the secret immediately invalidates the previous one',
+		description: 'The ID of the webhook endpoint whose signing secret should be reset',
 	},
 ];

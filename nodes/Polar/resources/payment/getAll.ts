@@ -42,7 +42,7 @@ export const paymentGetAllDescription: INodeProperties[] = [
 				name: 'method',
 				type: 'string',
 				default: '',
-				description: 'Filter payments by payment method',
+				description: 'Filter payments by payment method (e.g. "card")',
 				routing: { request: { qs: { method: '={{$value}}' } } },
 			},
 			{

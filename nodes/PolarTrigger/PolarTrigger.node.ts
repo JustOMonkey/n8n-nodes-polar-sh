@@ -7,43 +7,7 @@ import {
 	type IWebhookFunctions,
 	type IWebhookResponseData,
 } from 'n8n-workflow';
-
-const POLAR_EVENTS = [
-	'checkout.created',
-	'checkout.updated',
-	'checkout.expired',
-	'customer.created',
-	'customer.updated',
-	'customer.deleted',
-	'customer.state_changed',
-	'subscription.created',
-	'subscription.active',
-	'subscription.uncanceled',
-	'subscription.cycled',
-	'subscription.canceled',
-	'subscription.past_due',
-	'subscription.updated',
-	'subscription.revoked',
-	'subscription.paused',
-	'subscription.resumed',
-	'order.created',
-	'order.paid',
-	'order.updated',
-	'order.refunded',
-	'refund.created',
-	'refund.updated',
-	'benefit_grant.created',
-	'benefit_grant.updated',
-	'benefit_grant.revoked',
-	'benefit.created',
-	'benefit.updated',
-	'product.created',
-	'product.updated',
-	'discount.created',
-	'discount.updated',
-	'discount.deleted',
-	'organization.updated',
-] as const;
+import { webhookEventTypeOptions } from '../Polar/shared/descriptions';
 
 // Embedded into the `outputs` expression below via `.toString()` — the same technique
 // this package's declarative routing already uses for `nextPageInfo`/`buildPricesArray`.
@@ -144,7 +108,7 @@ export class PolarTrigger implements INodeType {
 				required: true,
 				default: 'checkout.created',
 				displayOptions: { show: { multipleEvents: [false] } },
-				options: POLAR_EVENTS.map((event) => ({ name: event, value: event })),
+				options: webhookEventTypeOptions,
 				description: 'Only this event type will trigger the workflow. Create a webhook endpoint for this event in the Polar dashboard, pointed at this node\'s webhook URL.',
 			},
 			{
@@ -154,7 +118,7 @@ export class PolarTrigger implements INodeType {
 				required: true,
 				default: [],
 				displayOptions: { show: { multipleEvents: [true] } },
-				options: POLAR_EVENTS.map((event) => ({ name: event, value: event })),
+				options: webhookEventTypeOptions,
 				description: 'Only these event types will trigger the workflow, each routed to its own output in the order selected. Create a webhook endpoint for these events in the Polar dashboard, pointed at this node\'s webhook URL.',
 			},
 			{
