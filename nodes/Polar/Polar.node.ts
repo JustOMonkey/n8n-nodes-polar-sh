@@ -18,6 +18,7 @@ import { memberDescription } from './resources/member';
 import { meterDescription } from './resources/meter';
 import { orderDescription } from './resources/order';
 import { organizationAccessTokenDescription } from './resources/organizationAccessToken';
+import { paymentDescription } from './resources/payment';
 import { productDescription } from './resources/product';
 import { refundDescription } from './resources/refund';
 import { subscriptionDescription } from './resources/subscription';
@@ -82,6 +83,7 @@ export class Polar implements INodeType {
 					{ name: 'Meter', value: 'meter' },
 					{ name: 'Order', value: 'order' },
 					{ name: 'Organization Access Token', value: 'organizationAccessToken' },
+					{ name: 'Payment', value: 'payment' },
 					{ name: 'Product', value: 'product' },
 					{ name: 'Refund', value: 'refund' },
 					{ name: 'Subscription', value: 'subscription' },
@@ -107,6 +109,7 @@ export class Polar implements INodeType {
 			...meterDescription,
 			...orderDescription,
 			...organizationAccessTokenDescription,
+			...paymentDescription,
 			...productDescription,
 			...refundDescription,
 			...subscriptionDescription,
