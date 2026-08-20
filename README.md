@@ -42,9 +42,12 @@ Resource + Operation node covering:
 - **Meter** — Create, Get, Get Many, Get Quantities, Update
 - **Order** — Get Many, Get, Create, Update, Finalize, Generate Invoice, Get Invoice, Get Receipt
 - **Organization Access Token** — Create, Delete, Get Many, Update — manage the org-scoped API tokens themselves (the same kind of token this package's own credential uses). The raw token value is only returned once, at creation.
+- **Payment** — Get Many, Get — read-only view of payments (`payments:read` only; no create/update/delete exists in the API)
 - **Product** — Get Many, Get, Create, Update, Update Benefits
 - **Refund** — Get Many, Create
 - **Subscription** — Get Many, Get, Create, Update, Update Seats, Update Billing Period, Cancel, Revoke, Pause, Resume, Clear Pending Update
+- **Webhook Delivery** — Get Many, Redeliver — delivery history for webhook events, and scheduling redelivery of a specific event
+- **Webhook Endpoint** — Create, Delete, Get, Get Many, Reset Secret, Update — manage webhook subscriptions (URL, payload format, subscribed event types); Reset Secret immediately invalidates the previous signing secret
 
 ### Polar Trigger
 
