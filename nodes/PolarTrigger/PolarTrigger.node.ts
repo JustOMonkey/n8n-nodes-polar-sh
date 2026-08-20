@@ -13,11 +13,8 @@ import { webhookEventTypeOptions } from '../Polar/shared/descriptions';
 // this package's declarative routing already uses for `nextPageInfo`/`buildPricesArray`.
 // n8n evaluates `outputs` expressions in an isolated context with only `$parameter`
 // available, so this function must be fully self-contained (no closures, no imports).
-function configuredOutputs(parameters: { events?: string | string[] }) {
-	const events = parameters.events;
-	if (!Array.isArray(events)) {
-		return [{ type: 'main', displayName: events }];
-	}
+function configuredOutputs(parameters: { events?: string[] }) {
+	const events = parameters.events || [];
 	return events.map((event) => ({ type: 'main', displayName: event }));
 }
 
@@ -64,7 +61,7 @@ export class PolarTrigger implements INodeType {
 		icon: { light: 'file:../../icons/polar.svg', dark: 'file:../../icons/polar.dark.svg' },
 		group: ['trigger'],
 		version: 1,
-		subtitle: '={{ Array.isArray($parameter["events"]) ? $parameter["events"].join(", ") : $parameter["events"] }}',
+		subtitle: '={{ $parameter["events"].join(", ") }}',
 		description: 'Starts the workflow when a Polar.sh webhook event is received',
 		defaults: {
 			name: 'Polar Trigger',
@@ -94,30 +91,11 @@ export class PolarTrigger implements INodeType {
 				description: "The webhook path that triggers this workflow. Leave empty to use this node's automatically-generated unique ID (matches the default behavior of n8n's core Webhook node); set your own value if you need a specific, predictable path.",
 			},
 			{
-				displayName: 'Allow Multiple Events',
-				name: 'multipleEvents',
-				type: 'boolean',
-				default: false,
-				isNodeSetting: true,
-				description: 'Whether to listen for multiple Polar event types, each routed to its own output',
-			},
-			{
-				displayName: 'Event',
-				name: 'events',
-				type: 'options',
-				required: true,
-				default: 'checkout.created',
-				displayOptions: { show: { multipleEvents: [false] } },
-				options: webhookEventTypeOptions,
-				description: 'Only this event type will trigger the workflow. Create a webhook endpoint for this event in the Polar dashboard, pointed at this node\'s webhook URL.',
-			},
-			{
 				displayName: 'Events',
 				name: 'events',
 				type: 'multiOptions',
 				required: true,
 				default: [],
-				displayOptions: { show: { multipleEvents: [true] } },
 				options: webhookEventTypeOptions,
 				description: 'Only these event types will trigger the workflow, each routed to its own output in the order selected. Create a webhook endpoint for these events in the Polar dashboard, pointed at this node\'s webhook URL.',
 			},
@@ -198,10 +176,8 @@ export class PolarTrigger implements INodeType {
 			return { noWebhookResponse: true };
 		}
 
-		// `events` is a single string when "Allow Multiple Events" is off, or an array when
-		// it's on — one output per selected event, matching `configuredOutputs` above.
-		const events = this.getNodeParameter('events') as string | string[];
-		const eventList = Array.isArray(events) ? events : [events];
+		// One output per selected event, matching `configuredOutputs` above.
+		const eventList = this.getNodeParameter('events') as string[];
 		const outputIndex = payload.type ? eventList.indexOf(payload.type) : -1;
 
 		if (outputIndex === -1) {
