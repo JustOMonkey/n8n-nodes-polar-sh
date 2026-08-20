@@ -47,7 +47,7 @@ Resource + Operation node covering:
 - **Refund** — Get Many, Create
 - **Subscription** — Get Many, Get, Create, Update, Update Seats, Update Billing Period, Cancel, Revoke, Pause, Resume, Clear Pending Update
 - **Webhook Delivery** — Get Many, Redeliver — delivery history for webhook events, and scheduling redelivery of a specific event
-- **Webhook Endpoint** — Create, Delete, Get, Get Many, Reset Secret, Update — manage webhook subscriptions (URL, payload format, subscribed event types); Reset Secret immediately invalidates the previous signing secret
+- **Webhook Endpoint** — Create, Delete, Get, Get Many, Reset Secret, Update — manage webhook subscriptions (URL, payload format, subscribed event types). Reset Secret immediately invalidates the previous signing secret
 
 ### Polar Trigger
 
