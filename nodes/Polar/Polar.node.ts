@@ -22,6 +22,7 @@ import { paymentDescription } from './resources/payment';
 import { productDescription } from './resources/product';
 import { refundDescription } from './resources/refund';
 import { subscriptionDescription } from './resources/subscription';
+import { webhookEndpointDescription } from './resources/webhookEndpoint';
 import { getProducts } from './listSearch/getProducts';
 import { getCustomers } from './listSearch/getCustomers';
 import { getBenefits } from './listSearch/getBenefits';
@@ -87,6 +88,7 @@ export class Polar implements INodeType {
 					{ name: 'Product', value: 'product' },
 					{ name: 'Refund', value: 'refund' },
 					{ name: 'Subscription', value: 'subscription' },
+					{ name: 'Webhook Endpoint', value: 'webhookEndpoint' },
 				],
 				default: 'checkout',
 			},
@@ -113,6 +115,7 @@ export class Polar implements INodeType {
 			...productDescription,
 			...refundDescription,
 			...subscriptionDescription,
+			...webhookEndpointDescription,
 		],
 	};
 
