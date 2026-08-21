@@ -18,22 +18,12 @@ function configuredOutputs(parameters: { events?: string[] }) {
 	return events.map((event) => ({ type: 'main', displayName: event }));
 }
 
-function resolveSigningKey(secret: string): Buffer {
-	// Standard Webhooks providers serialize the key as `whsec_<base64>`. Polar does
-	// not: its dashboard secret is an arbitrary UTF-8 string used directly as the
-	// HMAC key (Polar's SDK base64-encodes it before handing it to a Standard
-	// Webhooks verifier, which decodes it straight back) — confirmed against
-	// @polar-sh/sdk's `validateEvent`. Only decode base64 for an actual
-	// `whsec_`-prefixed secret; otherwise use the raw UTF-8 bytes.
-	if (secret.startsWith('whsec_')) {
-		return Buffer.from(secret.slice('whsec_'.length), 'base64');
-	}
-	return Buffer.from(secret, 'utf8');
-}
-
-function computeExpectedSignature(secret: string, id: string, timestamp: string, rawBody: string): Buffer {
-	const signedContent = `${id}.${timestamp}.${rawBody}`;
-	return createHmac('sha256', resolveSigningKey(secret)).update(signedContent, 'utf8').digest();
+function computeExpectedSignature(secret: string, id: string, timestamp: string, body: string): Buffer {
+	// The Polar dashboard secret is used verbatim as the HMAC key — no `whsec_`
+	// stripping, no base64 decoding. Matches n8n core's Crypto node (HMAC action),
+	// which passes the credential's secret straight into `createHmac(type, secret)`.
+	const signedContent = `${id}.${timestamp}.${body}`;
+	return createHmac('sha256', secret).update(signedContent, 'utf8').digest();
 }
 
 function isValidSignature(signatureHeader: string, expected: Buffer): boolean {
@@ -130,17 +120,15 @@ export class PolarTrigger implements INodeType {
 	};
 
 	async webhook(this: IWebhookFunctions): Promise<IWebhookResponseData> {
-		const req = this.getRequestObject();
 		const headers = this.getHeaderData() as IDataObject;
 		const res = this.getResponseObject();
 
 		const webhookId = headers['webhook-id'] as string | undefined;
 		const webhookTimestamp = headers['webhook-timestamp'] as string | undefined;
 		const webhookSignature = headers['webhook-signature'] as string | undefined;
-		const rawBody = (req as unknown as { rawBody?: Buffer }).rawBody;
 
-		if (!webhookId || !webhookTimestamp || !webhookSignature || !rawBody) {
-			res.status(400).json({ message: 'Missing Standard Webhooks signature headers or request body' });
+		if (!webhookId || !webhookTimestamp || !webhookSignature) {
+			res.status(400).json({ message: 'Missing Standard Webhooks signature headers' });
 			return { noWebhookResponse: true };
 		}
 
@@ -160,19 +148,15 @@ export class PolarTrigger implements INodeType {
 			return { noWebhookResponse: true };
 		}
 
-		const bodyString = rawBody.toString('utf8');
+		// n8n's webhook route already parses the incoming JSON body before this handler
+		// runs. Re-serializing that parsed body (rather than trying to capture the
+		// original raw bytes) is what actually reproduces the signature Polar computed.
+		const payload = this.getBodyData() as { type?: string; data?: IDataObject };
+		const bodyString = JSON.stringify(payload);
 		const expected = computeExpectedSignature(secret, webhookId, webhookTimestamp, bodyString);
 
 		if (!isValidSignature(webhookSignature, expected)) {
 			res.status(400).json({ message: 'Invalid webhook signature' });
-			return { noWebhookResponse: true };
-		}
-
-		let payload: { type?: string; data?: IDataObject };
-		try {
-			payload = JSON.parse(bodyString);
-		} catch {
-			res.status(400).json({ message: 'Invalid JSON payload' });
 			return { noWebhookResponse: true };
 		}
 

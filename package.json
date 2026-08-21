@@ -1,6 +1,6 @@
 {
 	"name": "@justonemonkey/n8n-nodes-polar-sh",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "n8n community node to manage Polar.sh (checkouts, orders, subscriptions, customers, benefits and more) directly from n8n workflows.",
 	"license": "MIT",
 	"publishConfig": {
