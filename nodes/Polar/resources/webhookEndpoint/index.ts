@@ -1,4 +1,5 @@
 import type { INodeProperties } from 'n8n-workflow';
+import { handlePolarApiError, scopeNoticesForResource } from '../../shared/errorHandling';
 import { webhookEndpointGetAllDescription } from './getAll';
 import { webhookEndpointGetDescription } from './get';
 import { webhookEndpointCreateDescription } from './create';
@@ -21,7 +22,10 @@ export const webhookEndpointDescription: INodeProperties[] = [
 				value: 'create',
 				action: 'Create a webhook endpoint',
 				description: 'Create a new webhook endpoint',
-				routing: { request: { method: 'POST', url: '=/webhooks/endpoints' } },
+				routing: {
+					request: { method: 'POST', url: '=/webhooks/endpoints', ignoreHttpStatusErrors: true },
+					output: { postReceive: [handlePolarApiError] },
+				},
 			},
 			{
 				name: 'Delete',
@@ -32,7 +36,9 @@ export const webhookEndpointDescription: INodeProperties[] = [
 					request: {
 						method: 'DELETE',
 						url: '=/webhooks/endpoints/{{$parameter["webhookEndpointId"]}}',
+						ignoreHttpStatusErrors: true,
 					},
+					output: { postReceive: [handlePolarApiError] },
 				},
 			},
 			{
@@ -44,7 +50,9 @@ export const webhookEndpointDescription: INodeProperties[] = [
 					request: {
 						method: 'GET',
 						url: '=/webhooks/endpoints/{{$parameter["webhookEndpointId"]}}',
+						ignoreHttpStatusErrors: true,
 					},
+					output: { postReceive: [handlePolarApiError] },
 				},
 			},
 			{
@@ -52,18 +60,24 @@ export const webhookEndpointDescription: INodeProperties[] = [
 				value: 'getAll',
 				action: 'Get many webhook endpoints',
 				description: 'Get many webhook endpoints',
-				routing: { request: { method: 'GET', url: '=/webhooks/endpoints' } },
+				routing: {
+					request: { method: 'GET', url: '=/webhooks/endpoints', ignoreHttpStatusErrors: true },
+					output: { postReceive: [handlePolarApiError] },
+				},
 			},
 			{
 				name: 'Reset Secret',
 				value: 'resetSecret',
 				action: 'Reset a webhook endpoint secret',
-				description: 'Regenerate a webhook endpoint secret. The previous secret is immediately invalidated.',
+				description:
+					'Regenerate a webhook endpoint secret. The previous secret is immediately invalidated.',
 				routing: {
 					request: {
 						method: 'PATCH',
 						url: '=/webhooks/endpoints/{{$parameter["webhookEndpointId"]}}/secret',
+						ignoreHttpStatusErrors: true,
 					},
+					output: { postReceive: [handlePolarApiError] },
 				},
 			},
 			{
@@ -75,12 +89,15 @@ export const webhookEndpointDescription: INodeProperties[] = [
 					request: {
 						method: 'PATCH',
 						url: '=/webhooks/endpoints/{{$parameter["webhookEndpointId"]}}',
+						ignoreHttpStatusErrors: true,
 					},
+					output: { postReceive: [handlePolarApiError] },
 				},
 			},
 		],
 		default: 'getAll',
 	},
+	...scopeNoticesForResource('webhookEndpoint'),
 	...webhookEndpointGetAllDescription,
 	...webhookEndpointGetDescription,
 	...webhookEndpointCreateDescription,

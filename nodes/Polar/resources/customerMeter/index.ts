@@ -1,4 +1,5 @@
 import type { INodeProperties } from 'n8n-workflow';
+import { handlePolarApiError, scopeNoticesForResource } from '../../shared/errorHandling';
 import { customerMeterGetAllDescription } from './getAll';
 import { customerMeterGetDescription } from './get';
 
@@ -17,18 +18,29 @@ export const customerMeterDescription: INodeProperties[] = [
 				value: 'get',
 				action: 'Get a customer meter',
 				description: 'Get a single customer meter by ID',
-				routing: { request: { method: 'GET', url: '=/customer-meters/{{$parameter["customerMeterId"]}}' } },
+				routing: {
+					request: {
+						method: 'GET',
+						url: '=/customer-meters/{{$parameter["customerMeterId"]}}',
+						ignoreHttpStatusErrors: true,
+					},
+					output: { postReceive: [handlePolarApiError] },
+				},
 			},
 			{
 				name: 'Get Many',
 				value: 'getAll',
 				action: 'Get many customer meters',
 				description: 'Get many customer meters',
-				routing: { request: { method: 'GET', url: '=/customer-meters/' } },
+				routing: {
+					request: { method: 'GET', url: '=/customer-meters/', ignoreHttpStatusErrors: true },
+					output: { postReceive: [handlePolarApiError] },
+				},
 			},
 		],
 		default: 'getAll',
 	},
+	...scopeNoticesForResource('customerMeter'),
 	...customerMeterGetAllDescription,
 	...customerMeterGetDescription,
 ];

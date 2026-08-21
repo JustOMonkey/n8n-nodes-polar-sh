@@ -1,4 +1,5 @@
 import type { INodeProperties } from 'n8n-workflow';
+import { handlePolarApiError, scopeNoticesForResource } from '../../shared/errorHandling';
 import { webhookDeliveryGetAllDescription } from './getAll';
 import { webhookDeliveryRedeliverDescription } from './redeliver';
 
@@ -17,7 +18,10 @@ export const webhookDeliveryDescription: INodeProperties[] = [
 				value: 'getAll',
 				action: 'Get many webhook deliveries',
 				description: 'Get many webhook deliveries',
-				routing: { request: { method: 'GET', url: '=/webhooks/deliveries' } },
+				routing: {
+					request: { method: 'GET', url: '=/webhooks/deliveries', ignoreHttpStatusErrors: true },
+					output: { postReceive: [handlePolarApiError] },
+				},
 			},
 			{
 				name: 'Redeliver',
@@ -28,12 +32,15 @@ export const webhookDeliveryDescription: INodeProperties[] = [
 					request: {
 						method: 'POST',
 						url: '=/webhooks/events/{{$parameter["webhookEventId"]}}/redeliver',
+						ignoreHttpStatusErrors: true,
 					},
+					output: { postReceive: [handlePolarApiError] },
 				},
 			},
 		],
 		default: 'getAll',
 	},
+	...scopeNoticesForResource('webhookDelivery'),
 	...webhookDeliveryGetAllDescription,
 	...webhookDeliveryRedeliverDescription,
 ];

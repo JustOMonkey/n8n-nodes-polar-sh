@@ -1,4 +1,5 @@
 import type { INodeProperties } from 'n8n-workflow';
+import { handlePolarApiError, scopeNoticesForResource } from '../../shared/errorHandling';
 import { customerSessionCreateDescription } from './create';
 
 const showOnlyForCustomerSession = { resource: ['customerSession'] };
@@ -16,10 +17,14 @@ export const customerSessionDescription: INodeProperties[] = [
 				value: 'create',
 				action: 'Create a customer session',
 				description: 'Generate a one-time customer portal access token',
-				routing: { request: { method: 'POST', url: '=/customer-sessions/' } },
+				routing: {
+					request: { method: 'POST', url: '=/customer-sessions/', ignoreHttpStatusErrors: true },
+					output: { postReceive: [handlePolarApiError] },
+				},
 			},
 		],
 		default: 'create',
 	},
+	...scopeNoticesForResource('customerSession'),
 	...customerSessionCreateDescription,
 ];

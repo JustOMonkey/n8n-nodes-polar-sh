@@ -1,4 +1,5 @@
 import type { INodeProperties } from 'n8n-workflow';
+import { handlePolarApiError, scopeNoticesForResource } from '../../shared/errorHandling';
 import { refundGetAllDescription } from './getAll';
 import { refundCreateDescription } from './create';
 
@@ -17,18 +18,25 @@ export const refundDescription: INodeProperties[] = [
 				value: 'getAll',
 				action: 'Get many refunds',
 				description: 'Get many refunds',
-				routing: { request: { method: 'GET', url: '=/refunds/' } },
+				routing: {
+					request: { method: 'GET', url: '=/refunds/', ignoreHttpStatusErrors: true },
+					output: { postReceive: [handlePolarApiError] },
+				},
 			},
 			{
 				name: 'Create',
 				value: 'create',
 				action: 'Create a refund',
 				description: 'Refund all or part of an order',
-				routing: { request: { method: 'POST', url: '=/refunds/' } },
+				routing: {
+					request: { method: 'POST', url: '=/refunds/', ignoreHttpStatusErrors: true },
+					output: { postReceive: [handlePolarApiError] },
+				},
 			},
 		],
 		default: 'getAll',
 	},
+	...scopeNoticesForResource('refund'),
 	...refundGetAllDescription,
 	...refundCreateDescription,
 ];

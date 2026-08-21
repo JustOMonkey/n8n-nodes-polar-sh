@@ -1,4 +1,5 @@
 import type { INodeProperties } from 'n8n-workflow';
+import { handlePolarApiError, scopeNoticesForResource } from '../../shared/errorHandling';
 import { organizationAccessTokenGetAllDescription } from './getAll';
 import { organizationAccessTokenCreateDescription } from './create';
 import { organizationAccessTokenUpdateDescription } from './update';
@@ -20,7 +21,14 @@ export const organizationAccessTokenDescription: INodeProperties[] = [
 				action: 'Create an organization access token',
 				description:
 					'Create a new organization access token. The raw token value is only ever returned once, in this response — capture it immediately.',
-				routing: { request: { method: 'POST', url: '=/organization-access-tokens/' } },
+				routing: {
+					request: {
+						method: 'POST',
+						url: '=/organization-access-tokens/',
+						ignoreHttpStatusErrors: true,
+					},
+					output: { postReceive: [handlePolarApiError] },
+				},
 			},
 			{
 				name: 'Delete',
@@ -31,7 +39,9 @@ export const organizationAccessTokenDescription: INodeProperties[] = [
 					request: {
 						method: 'DELETE',
 						url: '=/organization-access-tokens/{{$parameter["organizationAccessTokenId"]}}',
+						ignoreHttpStatusErrors: true,
 					},
+					output: { postReceive: [handlePolarApiError] },
 				},
 			},
 			{
@@ -39,7 +49,14 @@ export const organizationAccessTokenDescription: INodeProperties[] = [
 				value: 'getAll',
 				action: 'Get many organization access tokens',
 				description: 'Get many organization access tokens',
-				routing: { request: { method: 'GET', url: '=/organization-access-tokens/' } },
+				routing: {
+					request: {
+						method: 'GET',
+						url: '=/organization-access-tokens/',
+						ignoreHttpStatusErrors: true,
+					},
+					output: { postReceive: [handlePolarApiError] },
+				},
 			},
 			{
 				name: 'Update',
@@ -50,12 +67,15 @@ export const organizationAccessTokenDescription: INodeProperties[] = [
 					request: {
 						method: 'PATCH',
 						url: '=/organization-access-tokens/{{$parameter["organizationAccessTokenId"]}}',
+						ignoreHttpStatusErrors: true,
 					},
+					output: { postReceive: [handlePolarApiError] },
 				},
 			},
 		],
 		default: 'getAll',
 	},
+	...scopeNoticesForResource('organizationAccessToken'),
 	...organizationAccessTokenGetAllDescription,
 	...organizationAccessTokenCreateDescription,
 	...organizationAccessTokenUpdateDescription,

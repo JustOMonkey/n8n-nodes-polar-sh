@@ -1,4 +1,5 @@
 import type { INodeProperties } from 'n8n-workflow';
+import { handlePolarApiError, scopeNoticesForResource } from '../../shared/errorHandling';
 import { meterGetAllDescription } from './getAll';
 import { meterGetDescription } from './get';
 import { meterCreateDescription } from './create';
@@ -20,39 +21,67 @@ export const meterDescription: INodeProperties[] = [
 				value: 'create',
 				action: 'Create a meter',
 				description: 'Create a new meter',
-				routing: { request: { method: 'POST', url: '=/meters/' } },
+				routing: {
+					request: { method: 'POST', url: '=/meters/', ignoreHttpStatusErrors: true },
+					output: { postReceive: [handlePolarApiError] },
+				},
 			},
 			{
 				name: 'Get',
 				value: 'get',
 				action: 'Get a meter',
 				description: 'Get a single meter by ID',
-				routing: { request: { method: 'GET', url: '=/meters/{{$parameter["meterId"]}}' } },
+				routing: {
+					request: {
+						method: 'GET',
+						url: '=/meters/{{$parameter["meterId"]}}',
+						ignoreHttpStatusErrors: true,
+					},
+					output: { postReceive: [handlePolarApiError] },
+				},
 			},
 			{
 				name: 'Get Many',
 				value: 'getAll',
 				action: 'Get many meters',
 				description: 'Get many meters',
-				routing: { request: { method: 'GET', url: '=/meters/' } },
+				routing: {
+					request: { method: 'GET', url: '=/meters/', ignoreHttpStatusErrors: true },
+					output: { postReceive: [handlePolarApiError] },
+				},
 			},
 			{
 				name: 'Get Quantities',
 				value: 'getQuantities',
 				action: 'Get meter quantities',
 				description: "Get a meter's usage quantities over a time period",
-				routing: { request: { method: 'GET', url: '=/meters/{{$parameter["meterId"]}}/quantities' } },
+				routing: {
+					request: {
+						method: 'GET',
+						url: '=/meters/{{$parameter["meterId"]}}/quantities',
+						ignoreHttpStatusErrors: true,
+					},
+					output: { postReceive: [handlePolarApiError] },
+				},
 			},
 			{
 				name: 'Update',
 				value: 'update',
 				action: 'Update a meter',
 				description: 'Update an existing meter',
-				routing: { request: { method: 'PATCH', url: '=/meters/{{$parameter["meterId"]}}' } },
+				routing: {
+					request: {
+						method: 'PATCH',
+						url: '=/meters/{{$parameter["meterId"]}}',
+						ignoreHttpStatusErrors: true,
+					},
+					output: { postReceive: [handlePolarApiError] },
+				},
 			},
 		],
 		default: 'getAll',
 	},
+	...scopeNoticesForResource('meter'),
 	...meterGetAllDescription,
 	...meterGetDescription,
 	...meterCreateDescription,

@@ -1,4 +1,5 @@
 import type { INodeProperties } from 'n8n-workflow';
+import { handlePolarApiError, scopeNoticesForResource } from '../../shared/errorHandling';
 import { eventTypeGetAllDescription } from './getAll';
 import { eventTypeUpdateDescription } from './update';
 
@@ -17,18 +18,29 @@ export const eventTypeDescription: INodeProperties[] = [
 				value: 'getAll',
 				action: 'Get many event types',
 				description: 'Get many event types',
-				routing: { request: { method: 'GET', url: '=/event-types/' } },
+				routing: {
+					request: { method: 'GET', url: '=/event-types/', ignoreHttpStatusErrors: true },
+					output: { postReceive: [handlePolarApiError] },
+				},
 			},
 			{
 				name: 'Update',
 				value: 'update',
 				action: 'Update an event type',
 				description: "Update an event type's label",
-				routing: { request: { method: 'PATCH', url: '=/event-types/{{$parameter["eventTypeId"]}}' } },
+				routing: {
+					request: {
+						method: 'PATCH',
+						url: '=/event-types/{{$parameter["eventTypeId"]}}',
+						ignoreHttpStatusErrors: true,
+					},
+					output: { postReceive: [handlePolarApiError] },
+				},
 			},
 		],
 		default: 'getAll',
 	},
+	...scopeNoticesForResource('eventType'),
 	...eventTypeGetAllDescription,
 	...eventTypeUpdateDescription,
 ];

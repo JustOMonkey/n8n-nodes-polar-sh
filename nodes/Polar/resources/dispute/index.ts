@@ -1,4 +1,5 @@
 import type { INodeProperties } from 'n8n-workflow';
+import { handlePolarApiError, scopeNoticesForResource } from '../../shared/errorHandling';
 import { disputeGetAllDescription } from './getAll';
 import { disputeGetDescription } from './get';
 
@@ -17,18 +18,29 @@ export const disputeDescription: INodeProperties[] = [
 				value: 'get',
 				action: 'Get a dispute',
 				description: 'Get a single dispute by ID',
-				routing: { request: { method: 'GET', url: '=/disputes/{{$parameter["disputeId"]}}' } },
+				routing: {
+					request: {
+						method: 'GET',
+						url: '=/disputes/{{$parameter["disputeId"]}}',
+						ignoreHttpStatusErrors: true,
+					},
+					output: { postReceive: [handlePolarApiError] },
+				},
 			},
 			{
 				name: 'Get Many',
 				value: 'getAll',
 				action: 'Get many disputes',
 				description: 'Get many disputes',
-				routing: { request: { method: 'GET', url: '=/disputes/' } },
+				routing: {
+					request: { method: 'GET', url: '=/disputes/', ignoreHttpStatusErrors: true },
+					output: { postReceive: [handlePolarApiError] },
+				},
 			},
 		],
 		default: 'getAll',
 	},
+	...scopeNoticesForResource('dispute'),
 	...disputeGetAllDescription,
 	...disputeGetDescription,
 ];
