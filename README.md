@@ -51,6 +51,11 @@ Resource + Operation node covering:
 - **Webhook Delivery** — Get Many, Redeliver — delivery history for webhook events, and scheduling redelivery of a specific event
 - **Webhook Endpoint** — Create, Delete, Get, Get Many, Reset Secret, Update — manage webhook subscriptions (URL, payload format, subscribed event types). Reset Secret immediately invalidates the previous signing secret.
 
+#### Upgrading to 1.1
+
+- **Organization Access Token** resource removed — Polar no longer exposes these endpoints in its API; manage tokens from the Polar dashboard.
+- **Member** operations now require the customer (by ID, or by external ID for the "External" variants). Re-open existing Member nodes and fill in the Customer ID; the old Get Many filters (Customer ID / External Customer ID) are gone.
+
 ### Polar Trigger
 
 A webhook trigger node for all 42 of Polar's webhook event types (`checkout.*`, `customer.*`, `subscription.*`, `order.*`, `refund.*`, `benefit_grant.*`, `benefit.*`, `product.*`, `discount.*`, `organization.updated`). You create the webhook endpoint by hand in the Polar dashboard, pointing it at this node's webhook URL, and paste the generated signing secret into the node. Signatures are verified against the [Standard Webhooks](https://www.standardwebhooks.com/) spec.
