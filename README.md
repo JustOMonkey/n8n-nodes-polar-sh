@@ -51,7 +51,7 @@ Resource + Operation node covering:
 
 ### Polar Trigger
 
-A webhook trigger node for Polar's ~30 event types (`checkout.*`, `customer.*`, `subscription.*`, `order.*`, `refund.*`, `benefit_grant.*`, `benefit.*`, `product.*`, `discount.*`, `organization.updated`). You create the webhook endpoint by hand in the Polar dashboard, pointing it at this node's webhook URL, and paste the generated signing secret into the node. Signatures are verified against the [Standard Webhooks](https://www.standardwebhooks.com/) spec.
+A webhook trigger node for all 42 of Polar's webhook event types (`checkout.*`, `customer.*`, `subscription.*`, `order.*`, `refund.*`, `benefit_grant.*`, `benefit.*`, `product.*`, `discount.*`, `organization.updated`). You create the webhook endpoint by hand in the Polar dashboard, pointing it at this node's webhook URL, and paste the generated signing secret into the node. Signatures are verified against the [Standard Webhooks](https://www.standardwebhooks.com/) spec.
 
 By default the node listens for a single event type. Turn on **Allow Multiple Events** (mirrors n8n's core Webhook node's "Allow Multiple HTTP Methods" setting) to select several event types at once — the node then exposes one output per selected event, in the order selected, and routes each incoming webhook to the output matching its `type`.
 

@@ -236,7 +236,7 @@ function statusMessage(
 		return {
 			message: "Your Polar Access Token doesn't have permission to do this",
 			description: scopes
-				? `This operation requires the ${formatScopeList(scopes)} ${scopes.length > 1 ? 'scopes' : 'scope'} together on the token. Edit your Organization Access Token in the Polar dashboard (or use the Organization Access Token resource in this node) to add ${scopes.length > 1 ? 'them' : 'it'}.`
+				? `This operation requires the ${formatScopeList(scopes)} ${scopes.length > 1 ? 'scopes' : 'scope'} together on the token. Edit your Organization Access Token in the Polar dashboard to add ${scopes.length > 1 ? 'them' : 'it'}.`
 				: "This endpoint doesn't require a Polar API scope — a 403 here isn't a token permission issue (e.g. an invalid or expired invitation token).",
 		};
 	}
@@ -257,6 +257,20 @@ function statusMessage(
 	return { message: 'Polar API request failed', description: '' };
 }
 
+// Export endpoints are requested with `encoding: 'arraybuffer'`, so their error bodies arrive
+// as raw bytes rather than parsed JSON.
+function parseErrorBody(raw: unknown): IDataObject {
+	const text = Buffer.isBuffer(raw) ? raw.toString('utf8') : raw;
+	if (typeof text === 'string') {
+		try {
+			return JSON.parse(text) as IDataObject;
+		} catch {
+			return { message: text };
+		}
+	}
+	return (text ?? {}) as IDataObject;
+}
+
 /**
  * Shared `postReceive` handler wired onto every operation's `routing.request` (alongside
  * `ignoreHttpStatusErrors: true`, which is what makes error responses reach this function
@@ -273,7 +287,7 @@ export async function handlePolarApiError(
 	const operation = this.getNodeParameter('operation', '') as string;
 	const { message, description } = statusMessage(response.statusCode, resource, operation);
 
-	const body = (response.body ?? {}) as IDataObject;
+	const body = parseErrorBody(response.body);
 	const detail = typeof body.detail === 'string' ? body.detail : undefined;
 
 	throw new NodeApiError(this.getNode(), body as JsonObject, {
