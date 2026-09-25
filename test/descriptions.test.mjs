@@ -36,3 +36,28 @@ test('Metric Dashboard Get Many does not use pagination (bare array response)', 
 	);
 	assert.equal(paginated, undefined);
 });
+
+test('Order and Subscription export date filters send an ISO string with a UTC offset', () => {
+	const cases = [
+		{ resource: 'order', operation: 'export', name: 'created_after' },
+		{ resource: 'order', operation: 'export', name: 'created_before' },
+		{ resource: 'subscription', operation: 'export', name: 'started_after' },
+		{ resource: 'subscription', operation: 'export', name: 'started_before' },
+	];
+	for (const { resource, operation, name } of cases) {
+		const filters = properties.find(
+			(p) =>
+				p.name === 'filters' &&
+				p.displayOptions?.show?.resource?.[0] === resource &&
+				p.displayOptions?.show?.operation?.[0] === operation,
+		);
+		assert.ok(filters, `missing filters collection for ${resource}/${operation}`);
+		const option = filters.options.find((o) => o.name === name);
+		assert.ok(option, `missing filter option "${name}" for ${resource}/${operation}`);
+		assert.equal(
+			option.routing.request.qs[name],
+			'={{ DateTime.fromISO(String($value)).toISO() }}',
+			`unexpected qs expression for ${resource}/${operation}/${name}`,
+		);
+	}
+});

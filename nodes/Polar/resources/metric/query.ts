@@ -10,7 +10,7 @@ export const metricQueryProperties: INodeProperties[] = [
 		default: '',
 		required: true,
 		displayOptions: { show },
-		description: 'Only the date part is used',
+		description: 'Only the date part (YYYY-MM-DD) is used — pass an ISO date/time or a Luxon DateTime',
 		routing: { send: { type: 'query', property: 'start_date', value: '={{ String($value).slice(0, 10) }}' } },
 	},
 	{
@@ -20,7 +20,7 @@ export const metricQueryProperties: INodeProperties[] = [
 		default: '',
 		required: true,
 		displayOptions: { show },
-		description: 'Only the date part is used',
+		description: 'Only the date part (YYYY-MM-DD) is used — pass an ISO date/time or a Luxon DateTime',
 		routing: { send: { type: 'query', property: 'end_date', value: '={{ String($value).slice(0, 10) }}' } },
 	},
 	{
@@ -75,7 +75,8 @@ export const metricQueryProperties: INodeProperties[] = [
 				routing: {
 					request: {
 						qs: {
-							metrics: '={{ $value.split(",").map(s => s.trim()).filter(s => s) }}',
+							metrics:
+								'={{ (Array.isArray($value) ? $value : String($value).split(",")).map(s => String(s).trim()).filter(s => s) }}',
 						},
 					},
 				},

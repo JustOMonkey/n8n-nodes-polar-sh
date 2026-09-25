@@ -55,10 +55,11 @@ Resource + Operation node covering:
 
 - **Organization Access Token** resource removed — Polar no longer exposes these endpoints in its API; manage tokens from the Polar dashboard.
 - **Member** operations now require the customer (by ID, or by external ID for the "External" variants). Re-open existing Member nodes and fill in the Customer ID; the old Get Many filters (Customer ID / External Customer ID) are gone.
+- Legacy **Get by External ID** now requires the **External Customer ID** (customer and member are both identified by external IDs); its old Customer ID / External Customer ID filters were removed.
 
 ### Polar Trigger
 
-A webhook trigger node for all 42 of Polar's webhook event types (`checkout.*`, `customer.*`, `subscription.*`, `order.*`, `refund.*`, `benefit_grant.*`, `benefit.*`, `product.*`, `discount.*`, `organization.updated`). You create the webhook endpoint by hand in the Polar dashboard, pointing it at this node's webhook URL, and paste the generated signing secret into the node. Signatures are verified against the [Standard Webhooks](https://www.standardwebhooks.com/) spec.
+A webhook trigger node for all 42 of Polar's webhook event types (`checkout.*`, `customer.*`, `customer_seat.*`, `member.*`, `subscription.*`, `order.*`, `refund.*`, `benefit_grant.*`, `benefit.*`, `product.*`, `discount.*`, `organization.updated`). You create the webhook endpoint by hand in the Polar dashboard, pointing it at this node's webhook URL, and paste the generated signing secret into the node. Signatures are verified against the [Standard Webhooks](https://www.standardwebhooks.com/) spec.
 
 By default the node listens for a single event type. Turn on **Allow Multiple Events** (mirrors n8n's core Webhook node's "Allow Multiple HTTP Methods" setting) to select several event types at once — the node then exposes one output per selected event, in the order selected, and routes each incoming webhook to the output matching its `type`.
 

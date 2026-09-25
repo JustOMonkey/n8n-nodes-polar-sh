@@ -19,7 +19,12 @@ export const metricDashboardUpdateDescription: INodeProperties[] = [
 				placeholder: 'revenue, orders',
 				description: 'Comma-separated metric slugs to display (max 10). Replaces the current list.',
 				routing: {
-					request: { body: { metrics: '={{ $value.split(",").map(s => s.trim()).filter(s => s) }}' } },
+					request: {
+						body: {
+							metrics:
+								'={{ (Array.isArray($value) ? $value : String($value).split(",")).map(s => String(s).trim()).filter(s => s) }}',
+						},
+					},
 				},
 			},
 			{

@@ -42,14 +42,16 @@ export const orderExportDescription: INodeProperties[] = [
 				name: 'created_after',
 				type: 'dateTime',
 				default: '',
-				routing: { request: { qs: { created_after: '={{$value}}' } } },
+				description: "Interpreted in the workflow's time zone",
+				routing: { request: { qs: { created_after: '={{ DateTime.fromISO(String($value)).toISO() }}' } } },
 			},
 			{
 				displayName: 'Created Before',
 				name: 'created_before',
 				type: 'dateTime',
 				default: '',
-				routing: { request: { qs: { created_before: '={{$value}}' } } },
+				description: "Interpreted in the workflow's time zone",
+				routing: { request: { qs: { created_before: '={{ DateTime.fromISO(String($value)).toISO() }}' } } },
 			},
 			{
 				displayName: 'Product ID',

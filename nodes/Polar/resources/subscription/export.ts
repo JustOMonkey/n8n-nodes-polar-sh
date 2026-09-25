@@ -63,14 +63,16 @@ export const subscriptionExportDescription: INodeProperties[] = [
 				name: 'started_after',
 				type: 'dateTime',
 				default: '',
-				routing: { request: { qs: { started_after: '={{$value}}' } } },
+				description: "Interpreted in the workflow's time zone",
+				routing: { request: { qs: { started_after: '={{ DateTime.fromISO(String($value)).toISO() }}' } } },
 			},
 			{
 				displayName: 'Started Before',
 				name: 'started_before',
 				type: 'dateTime',
 				default: '',
-				routing: { request: { qs: { started_before: '={{$value}}' } } },
+				description: "Interpreted in the workflow's time zone",
+				routing: { request: { qs: { started_before: '={{ DateTime.fromISO(String($value)).toISO() }}' } } },
 			},
 			{
 				displayName: 'Status',

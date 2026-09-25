@@ -1,4 +1,5 @@
 import type { INodeProperties } from 'n8n-workflow';
+import { countryOptions, currencyOptions } from '../../shared/descriptions';
 
 const show = { resource: ['organization'], operation: ['update'] };
 
@@ -21,19 +22,19 @@ export const organizationUpdateDescription: INodeProperties[] = [
 			{
 				displayName: 'Country',
 				name: 'country',
-				type: 'string',
-				default: '',
-				placeholder: 'FR',
-				description: 'Two-letter country code (ISO 3166-1 alpha-2)',
+				type: 'options',
+				options: countryOptions,
+				default: 'US',
+				description: 'ISO 3166-1 alpha-2 country code',
 				routing: { request: { body: { country: '={{$value}}' } } },
 			},
 			{
 				displayName: 'Default Presentment Currency',
 				name: 'default_presentment_currency',
-				type: 'string',
-				default: '',
-				placeholder: 'eur',
-				description: 'Lowercase ISO 4217 currency code',
+				type: 'options',
+				options: currencyOptions,
+				default: 'usd',
+				description: 'ISO 4217 currency code',
 				routing: { request: { body: { default_presentment_currency: '={{$value}}' } } },
 			},
 			{
