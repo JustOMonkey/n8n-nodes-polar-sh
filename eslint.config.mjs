@@ -1,3 +1,3 @@
 import { config } from '@n8n/node-cli/eslint';
 
-export default [...config, { ignores: ['scripts/**', 'test/**'] }];
+export default config;
