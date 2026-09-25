@@ -11,6 +11,8 @@ import { subscriptionRevokeDescription } from './revoke';
 import { subscriptionPauseDescription } from './pause';
 import { subscriptionResumeDescription } from './resume';
 import { subscriptionClearPendingUpdateDescription } from './clearPendingUpdate';
+import { csvToBinary } from '../../shared/binary';
+import { subscriptionExportDescription } from './export';
 
 const showOnlyForSubscription = { resource: ['subscription'] };
 
@@ -58,6 +60,24 @@ export const subscriptionDescription: INodeProperties[] = [
 				routing: {
 					request: { method: 'POST', url: '=/subscriptions/', ignoreHttpStatusErrors: true },
 					output: { postReceive: [handlePolarApiError] },
+				},
+			},
+			{
+				name: 'Export',
+				value: 'export',
+				action: 'Export subscriptions',
+				description: 'Download subscriptions as a CSV file (binary property "data")',
+				routing: {
+					request: {
+						method: 'GET',
+						url: '=/subscriptions/export',
+						ignoreHttpStatusErrors: true,
+						encoding: 'arraybuffer',
+						json: false,
+						arrayFormat: 'repeat',
+						headers: { Accept: 'text/csv' },
+					},
+					output: { postReceive: [handlePolarApiError, csvToBinary('subscriptions-export.csv')] },
 				},
 			},
 			{
@@ -183,4 +203,5 @@ export const subscriptionDescription: INodeProperties[] = [
 	...subscriptionPauseDescription,
 	...subscriptionResumeDescription,
 	...subscriptionClearPendingUpdateDescription,
+	...subscriptionExportDescription,
 ];

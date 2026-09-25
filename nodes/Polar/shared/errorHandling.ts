@@ -138,6 +138,7 @@ const OPERATION_SCOPES: Record<string, Record<string, string[] | null>> = {
 	},
 	order: {
 		create: ['orders:write'],
+		export: ['orders:read'],
 		finalize: ['orders:write'],
 		generateInvoice: ['orders:read'],
 		get: ['orders:read'],
@@ -163,6 +164,7 @@ const OPERATION_SCOPES: Record<string, Record<string, string[] | null>> = {
 		cancel: ['subscriptions:write'],
 		clearPendingUpdate: ['subscriptions:write'],
 		create: ['subscriptions:write'],
+		export: ['subscriptions:read', 'subscriptions:write'],
 		get: ['subscriptions:read', 'subscriptions:write'],
 		getAll: ['subscriptions:read', 'subscriptions:write'],
 		pause: ['subscriptions:write'],

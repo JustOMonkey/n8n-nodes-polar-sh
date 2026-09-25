@@ -8,6 +8,8 @@ import { orderFinalizeDescription } from './finalize';
 import { orderGenerateInvoiceDescription } from './generateInvoice';
 import { orderGetInvoiceDescription } from './getInvoice';
 import { orderGetReceiptDescription } from './getReceipt';
+import { csvToBinary } from '../../shared/binary';
+import { orderExportDescription } from './export';
 
 const showOnlyForOrder = { resource: ['order'] };
 
@@ -27,6 +29,24 @@ export const orderDescription: INodeProperties[] = [
 				routing: {
 					request: { method: 'POST', url: '=/orders/', ignoreHttpStatusErrors: true },
 					output: { postReceive: [handlePolarApiError] },
+				},
+			},
+			{
+				name: 'Export',
+				value: 'export',
+				action: 'Export orders',
+				description: 'Download orders as a CSV file (binary property "data")',
+				routing: {
+					request: {
+						method: 'GET',
+						url: '=/orders/export',
+						ignoreHttpStatusErrors: true,
+						encoding: 'arraybuffer',
+						json: false,
+						arrayFormat: 'repeat',
+						headers: { Accept: 'text/csv' },
+					},
+					output: { postReceive: [handlePolarApiError, csvToBinary('orders-export.csv')] },
 				},
 			},
 			{
@@ -135,4 +155,5 @@ export const orderDescription: INodeProperties[] = [
 	...orderGenerateInvoiceDescription,
 	...orderGetInvoiceDescription,
 	...orderGetReceiptDescription,
+	...orderExportDescription,
 ];

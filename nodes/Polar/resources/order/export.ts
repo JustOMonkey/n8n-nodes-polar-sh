@@ -1,0 +1,87 @@
+import type { INodeProperties } from 'n8n-workflow';
+
+const show = { resource: ['order'], operation: ['export'] };
+
+export const orderExportDescription: INodeProperties[] = [
+	{
+		displayName: 'Filters',
+		name: 'filters',
+		type: 'collection',
+		placeholder: 'Add Filter',
+		default: {},
+		displayOptions: { show },
+		options: [
+			{
+				displayName: 'Columns',
+				name: 'columns',
+				type: 'multiOptions',
+				options: [
+					{ name: 'Billing Country', value: 'billing_country' },
+					{ name: 'Billing Name', value: 'billing_name' },
+					{ name: 'Billing Reason', value: 'billing_reason' },
+					{ name: 'Created At', value: 'created_at' },
+					{ name: 'Currency', value: 'currency' },
+					{ name: 'Customer Name', value: 'customer_name' },
+					{ name: 'Discount Amount', value: 'discount_amount' },
+					{ name: 'Email', value: 'email' },
+					{ name: 'Invoice Number', value: 'invoice_number' },
+					{ name: 'Net Amount', value: 'net_amount' },
+					{ name: 'Product', value: 'product' },
+					{ name: 'Refunded Amount', value: 'refunded_amount' },
+					{ name: 'Status', value: 'status' },
+					{ name: 'Subtotal Amount', value: 'subtotal_amount' },
+					{ name: 'Tax Amount', value: 'tax_amount' },
+					{ name: 'Total Amount', value: 'total_amount' },
+				],
+				default: [],
+				description: "Columns to include, in the order Polar returns them. Leave empty for Polar's default set.",
+				routing: { request: { qs: { columns: '={{$value}}' } } },
+			},
+			{
+				displayName: 'Created After',
+				name: 'created_after',
+				type: 'dateTime',
+				default: '',
+				routing: { request: { qs: { created_after: '={{$value}}' } } },
+			},
+			{
+				displayName: 'Created Before',
+				name: 'created_before',
+				type: 'dateTime',
+				default: '',
+				routing: { request: { qs: { created_before: '={{$value}}' } } },
+			},
+			{
+				displayName: 'Product ID',
+				name: 'product_id',
+				type: 'string',
+				default: '',
+				routing: { request: { qs: { product_id: '={{$value}}' } } },
+			},
+			{
+				displayName: 'Status',
+				name: 'status',
+				type: 'multiOptions',
+				options: [
+					{ name: 'Draft', value: 'draft' },
+					{ name: 'Paid', value: 'paid' },
+					{ name: 'Partially Refunded', value: 'partially_refunded' },
+					{ name: 'Pending', value: 'pending' },
+					{ name: 'Refunded', value: 'refunded' },
+					{ name: 'Void', value: 'void' },
+				],
+				default: [],
+				routing: { request: { qs: { status: '={{$value}}' } } },
+			},
+			{
+				displayName: 'Timezone',
+				name: 'timezone',
+				type: 'string',
+				default: '',
+				placeholder: 'Europe/Paris',
+				description: 'IANA time zone used to render dates in the CSV (defaults to UTC)',
+				routing: { request: { qs: { timezone: '={{$value}}' } } },
+			},
+		],
+	},
+];
