@@ -1,0 +1,162 @@
+import type { INodeProperties } from 'n8n-workflow';
+import { countryOptions } from '../../Polar/shared/descriptions';
+import { portalRouting } from '../shared/errorHandling';
+
+const resource = ['customer'];
+
+export const customerDescription: INodeProperties[] = [
+	{
+		displayName: 'Operation',
+		name: 'operation',
+		type: 'options',
+		noDataExpression: true,
+		displayOptions: { show: { resource } },
+		options: [
+			{
+				name: 'Check Email Change Token',
+				value: 'checkEmailChange',
+				action: 'Check an email change token',
+				description:
+					'Check that an email change verification token is still valid (no customer session needed)',
+				routing: portalRouting('GET', '=/customer-portal/customers/me/email-update/check'),
+			},
+			{
+				name: 'Get',
+				value: 'get',
+				action: 'Get the customer',
+				description: 'Get the customer the session belongs to',
+				routing: portalRouting('GET', '=/customer-portal/customers/me'),
+			},
+			{
+				name: 'Request Email Change',
+				value: 'requestEmailChange',
+				action: 'Request an email change',
+				description: 'Send a verification email to the new address',
+				routing: portalRouting('POST', '=/customer-portal/customers/me/email-update/request'),
+			},
+			{
+				name: 'Update',
+				value: 'update',
+				action: 'Update the customer',
+				description: 'Update billing details and the default payment method',
+				routing: portalRouting('PATCH', '=/customer-portal/customers/me'),
+			},
+			{
+				name: 'Verify Email Change',
+				value: 'verifyEmailChange',
+				action: 'Verify an email change',
+				description:
+					'Confirm an email change with the token from the verification email (no customer session needed)',
+				routing: portalRouting('POST', '=/customer-portal/customers/me/email-update/verify'),
+			},
+		],
+		default: 'get',
+	},
+	{
+		displayName: 'Verification Token',
+		name: 'token',
+		type: 'string',
+		typeOptions: { password: true },
+		default: '',
+		required: true,
+		displayOptions: { show: { resource, operation: ['checkEmailChange'] } },
+		description: 'The token from the email change verification link',
+		routing: { send: { type: 'query', property: 'token' } },
+	},
+	{
+		displayName: 'Verification Token',
+		name: 'token',
+		type: 'string',
+		typeOptions: { password: true },
+		default: '',
+		required: true,
+		displayOptions: { show: { resource, operation: ['verifyEmailChange'] } },
+		description: 'The token from the email change verification link',
+		routing: { send: { type: 'body', property: 'token' } },
+	},
+	{
+		displayName: 'New Email',
+		name: 'email',
+		type: 'string',
+		default: '',
+		required: true,
+		placeholder: 'name@email.com',
+		displayOptions: { show: { resource, operation: ['requestEmailChange'] } },
+		routing: { send: { type: 'body', property: 'email' } },
+	},
+	{
+		displayName: 'Update Fields',
+		name: 'updateFields',
+		type: 'collection',
+		placeholder: 'Add Field',
+		default: {},
+		displayOptions: { show: { resource, operation: ['update'] } },
+		options: [
+			{
+				displayName: 'Billing Address City',
+				name: 'billing_address_city',
+				type: 'string',
+				default: '',
+				routing: { send: { type: 'body', property: 'billing_address.city' } },
+			},
+			{
+				displayName: 'Billing Address Country',
+				name: 'billing_address_country',
+				type: 'options',
+				options: countryOptions,
+				default: 'US',
+				description: 'Required whenever any billing address field is set',
+				routing: { send: { type: 'body', property: 'billing_address.country' } },
+			},
+			{
+				displayName: 'Billing Address Line 1',
+				name: 'billing_address_line1',
+				type: 'string',
+				default: '',
+				routing: { send: { type: 'body', property: 'billing_address.line1' } },
+			},
+			{
+				displayName: 'Billing Address Line 2',
+				name: 'billing_address_line2',
+				type: 'string',
+				default: '',
+				routing: { send: { type: 'body', property: 'billing_address.line2' } },
+			},
+			{
+				displayName: 'Billing Address Postal Code',
+				name: 'billing_address_postal_code',
+				type: 'string',
+				default: '',
+				routing: { send: { type: 'body', property: 'billing_address.postal_code' } },
+			},
+			{
+				displayName: 'Billing Address State',
+				name: 'billing_address_state',
+				type: 'string',
+				default: '',
+				routing: { send: { type: 'body', property: 'billing_address.state' } },
+			},
+			{
+				displayName: 'Billing Name',
+				name: 'billing_name',
+				type: 'string',
+				default: '',
+				routing: { send: { type: 'body', property: 'billing_name' } },
+			},
+			{
+				displayName: 'Default Payment Method ID',
+				name: 'default_payment_method_id',
+				type: 'string',
+				default: '',
+				routing: { send: { type: 'body', property: 'default_payment_method_id' } },
+			},
+			{
+				displayName: 'Tax ID',
+				name: 'tax_id',
+				type: 'string',
+				default: '',
+				routing: { send: { type: 'body', property: 'tax_id' } },
+			},
+		],
+	},
+];

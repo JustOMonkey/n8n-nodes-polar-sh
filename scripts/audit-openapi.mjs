@@ -10,8 +10,10 @@ const spec = SPEC.startsWith('http')
 	? await (await fetch(SPEC)).json()
 	: JSON.parse(await readFile(SPEC, 'utf8'));
 
-// Endpoints the Polar node deliberately doesn't cover (see the Lot 3a spec, "Out of scope").
-const EXCLUDED_PREFIXES = ['/customer-portal/', '/oauth2/', '/checkouts/client/'];
+// Endpoints no node deliberately covers (see the Lot 3a spec, "Out of scope").
+// /customer-portal/* belongs to the Polar Customer Portal node, checked separately below.
+const EXCLUDED_PREFIXES = ['/oauth2/', '/checkouts/client/'];
+const PORTAL_PREFIX = '/customer-portal/';
 const EXCLUDED_OPS = new Set(['POST /organizations']);
 
 const norm = (url) =>
@@ -44,6 +46,20 @@ for (const prop of properties) {
 	}
 }
 
+// The Customer Portal node authenticates with customer/member session tokens, so it has no
+// Organization Access Token scope notices — only endpoint existence and coverage are checked.
+const { PolarCustomerPortal } = require('../dist/nodes/PolarCustomerPortal/PolarCustomerPortal.node.js');
+const portalOps = new Map(); // key -> "resource.operation"
+for (const prop of new PolarCustomerPortal().description.properties) {
+	if (prop.name !== 'operation' || prop.type !== 'options') continue;
+	const resource = prop.displayOptions.show.resource[0];
+	for (const option of prop.options) {
+		const request = option.routing?.request;
+		if (!request) continue;
+		portalOps.set(`${request.method} ${norm(request.url)}`, `${resource}.${option.value}`);
+	}
+}
+
 const notices = new Map(); // "resource.operation" -> sorted scopes
 for (const prop of properties) {
 	if (prop.type !== 'notice' || !prop.name.endsWith('ScopeNotice')) continue;
@@ -69,10 +85,23 @@ for (const [key, { resource, operation, request }] of nodeOps) {
 		problems.push(`ARRAYFORMAT ${resource}.${operation} must set arrayFormat: 'repeat'`);
 	}
 }
+const pathOf = (key) => key.slice(key.indexOf(' ') + 1);
+for (const [key, label] of portalOps) {
+	if (!specOps.has(key)) problems.push(`NOT IN API  ${key}  (customer portal ${label})`);
+	else if (!pathOf(key).startsWith(PORTAL_PREFIX)) {
+		problems.push(`WRONG NODE  ${key}  (customer portal ${label}) is not a /customer-portal/ endpoint`);
+	}
+}
+for (const key of nodeOps.keys()) {
+	if (pathOf(key).startsWith(PORTAL_PREFIX)) {
+		problems.push(`WRONG NODE  ${key} belongs in the Polar Customer Portal node`);
+	}
+}
 for (const key of specOps.keys()) {
-	const path = key.slice(key.indexOf(' ') + 1);
+	const path = pathOf(key);
 	if (EXCLUDED_OPS.has(key) || EXCLUDED_PREFIXES.some((p) => path.startsWith(p))) continue;
-	if (!nodeOps.has(key)) problems.push(`MISSING     ${key}`);
+	const covered = path.startsWith(PORTAL_PREFIX) ? portalOps.has(key) : nodeOps.has(key);
+	if (!covered) problems.push(`MISSING     ${key}`);
 }
 
 const { webhookEventTypeOptions } = require('../dist/nodes/Polar/shared/descriptions.js');
@@ -82,5 +111,7 @@ for (const e of specEvents) if (!nodeEvents.has(e)) problems.push(`EVENTS      m
 for (const e of nodeEvents) if (!specEvents.includes(e)) problems.push(`EVENTS      not in API ${e}`);
 
 for (const p of problems) console.log(p);
-console.log(`\n${nodeOps.size} node operations, ${specOps.size} spec operations, ${problems.length} problem(s)`);
+console.log(
+	`\n${nodeOps.size} Polar + ${portalOps.size} Customer Portal node operations, ${specOps.size} spec operations, ${problems.length} problem(s)`,
+);
 process.exit(problems.length ? 1 : 0);

@@ -57,6 +57,31 @@ Resource + Operation node covering:
 - **Member** operations now require the customer (by ID, or by external ID for the "External" variants). Re-open existing Member nodes and fill in the Customer ID; the old Get Many filters (Customer ID / External Customer ID) are gone.
 - Legacy **Get by External ID** now requires the **External Customer ID** (customer and member are both identified by external IDs); its old Customer ID / External Customer ID filters were removed.
 
+### Polar Customer Portal
+
+A separate node for Polar's [Customer Portal API](https://polar.sh/docs/api-reference/introduction): it acts **on behalf of one customer**, the way your own customer-facing app would (self-service billing, support bots, "cancel my subscription" flows). It does **not** use the Polar API credential — these endpoints only accept a short-lived customer (or member) session token:
+
+1. In a **Polar** node, run **Customer Session → Create** for the customer.
+2. In the **Polar Customer Portal** node, pick the same **Environment** and put the returned `token` in **Customer Session Token** (with an expression).
+
+Resources:
+
+- **Benefit Grant** — Get, Get Many, Update (connect the Discord / GitHub account or Slack email a benefit is delivered to)
+- **Customer** — Get, Update (billing name/address, tax ID, default payment method), Request Email Change, Check Email Change Token, Verify Email Change
+- **Customer Meter** — Get, Get Many — the customer's usage and balance per meter
+- **Downloadable** — Get Many — files the customer can download, with download URLs
+- **License Key** — Get, Get Many, Rotate, Activate, Deactivate, Validate
+- **Member** — Add, Get Many, Update, Remove — the customer's team (B2B; needs a **member** session of an owner or billing manager)
+- **Order** — Get, Get Many, Update (billing details), Generate Invoice, Get Invoice, Get Receipt, Get Payment Status, Confirm Retry Payment
+- **Organization** — Get — public portal info and products by organization slug
+- **Payment Method** — Add, Confirm, Delete, Get Many (Add/Confirm take Stripe confirmation token / setup intent IDs from your front end)
+- **Seat** — Assign, Get Many, Get Claimed Subscriptions, Resend Invitation, Revoke
+- **Session** — Get User, Introspect (who the token belongs to, when it expires)
+- **Subscription** — Get, Get Many, Cancel, Update Cancellation (cancel at period end with a reason, or undo it), Change Product, Update Seats, Update Units, Pause, Resume, Clear Pending Update
+- **Wallet** — Get, Get Many
+
+License Key Activate/Deactivate/Validate, Organization Get and Customer Check/Verify Email Change are public — leave the token empty for those.
+
 ### Polar Trigger
 
 A webhook trigger node for all 42 of Polar's webhook event types (`checkout.*`, `customer.*`, `customer_seat.*`, `member.*`, `subscription.*`, `order.*`, `refund.*`, `benefit_grant.*`, `benefit.*`, `product.*`, `discount.*`, `organization.updated`). You create the webhook endpoint by hand in the Polar dashboard, pointing it at this node's webhook URL, and paste the generated signing secret into the node. Signatures are verified against the [Standard Webhooks](https://www.standardwebhooks.com/) spec.

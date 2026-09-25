@@ -43,6 +43,7 @@
 		],
 		"nodes": [
 			"dist/nodes/Polar/Polar.node.js",
+			"dist/nodes/PolarCustomerPortal/PolarCustomerPortal.node.js",
 			"dist/nodes/PolarTrigger/PolarTrigger.node.js"
 		]
 	},

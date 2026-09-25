@@ -1,0 +1,177 @@
+import type { INodeProperties } from 'n8n-workflow';
+import { paginationProperties, typedMetadataField } from '../../Polar/shared/descriptions';
+import { portalRouting } from '../shared/errorHandling';
+
+const resource = ['licenseKey'];
+const showGetAll = { resource, operation: ['getAll'] };
+const byKey = ['activate', 'deactivate', 'validate'];
+
+export const licenseKeyDescription: INodeProperties[] = [
+	{
+		displayName: 'Operation',
+		name: 'operation',
+		type: 'options',
+		noDataExpression: true,
+		displayOptions: { show: { resource } },
+		options: [
+			{
+				name: 'Activate',
+				value: 'activate',
+				action: 'Activate a license key',
+				description: 'Register a new activation (e.g. a device) for a license key (no customer session needed)',
+				routing: portalRouting('POST', '=/customer-portal/license-keys/activate'),
+			},
+			{
+				name: 'Deactivate',
+				value: 'deactivate',
+				action: 'Deactivate a license key',
+				description: 'Remove an activation from a license key (no customer session needed)',
+				routing: portalRouting('POST', '=/customer-portal/license-keys/deactivate'),
+			},
+			{
+				name: 'Get',
+				value: 'get',
+				action: 'Get a license key',
+				description: 'Get one of the customer\'s license keys, with its activations',
+				routing: portalRouting('GET', '=/customer-portal/license-keys/{{$parameter["licenseKeyId"]}}'),
+			},
+			{
+				name: 'Get Many',
+				value: 'getAll',
+				action: 'Get many license keys',
+				description: "List the customer's license keys",
+				routing: portalRouting('GET', '=/customer-portal/license-keys/'),
+			},
+			{
+				name: 'Rotate',
+				value: 'rotate',
+				action: 'Rotate a license key',
+				description: 'Replace a license key with a new one — the old key stops working immediately',
+				routing: portalRouting(
+					'POST',
+					'=/customer-portal/license-keys/{{$parameter["licenseKeyId"]}}/rotate',
+				),
+			},
+			{
+				name: 'Validate',
+				value: 'validate',
+				action: 'Validate a license key',
+				description: 'Check that a license key is valid (no customer session needed)',
+				routing: portalRouting('POST', '=/customer-portal/license-keys/validate'),
+			},
+		],
+		default: 'getAll',
+	},
+	{
+		displayName: 'License Key ID',
+		name: 'licenseKeyId',
+		type: 'string',
+		default: '',
+		required: true,
+		displayOptions: { show: { resource, operation: ['get', 'rotate'] } },
+	},
+	...paginationProperties(showGetAll),
+	{
+		displayName: 'Filters',
+		name: 'filters',
+		type: 'collection',
+		placeholder: 'Add Filter',
+		default: {},
+		displayOptions: { show: showGetAll },
+		options: [
+			{
+				displayName: 'Benefit ID',
+				name: 'benefit_id',
+				type: 'string',
+				default: '',
+				routing: { request: { qs: { benefit_id: '={{$value}}' } } },
+			},
+		],
+	},
+	{
+		displayName: 'Key',
+		name: 'key',
+		type: 'string',
+		typeOptions: { password: true },
+		default: '',
+		required: true,
+		displayOptions: { show: { resource, operation: byKey } },
+		description: 'The license key string',
+		routing: { send: { type: 'body', property: 'key' } },
+	},
+	{
+		displayName: 'Organization ID',
+		name: 'organizationId',
+		type: 'string',
+		default: '',
+		required: true,
+		displayOptions: { show: { resource, operation: byKey } },
+		description: 'ID of the organization that issued the license key',
+		routing: { send: { type: 'body', property: 'organization_id' } },
+	},
+	{
+		displayName: 'Label',
+		name: 'label',
+		type: 'string',
+		default: '',
+		required: true,
+		displayOptions: { show: { resource, operation: ['activate'] } },
+		description: 'A label identifying this activation instance (e.g. a device or machine name)',
+		routing: { send: { type: 'body', property: 'label' } },
+	},
+	{
+		displayName: 'Activation ID',
+		name: 'activationId',
+		type: 'string',
+		default: '',
+		required: true,
+		displayOptions: { show: { resource, operation: ['deactivate'] } },
+		routing: { send: { type: 'body', property: 'activation_id' } },
+	},
+	{
+		displayName: 'Additional Fields',
+		name: 'additionalFields',
+		type: 'collection',
+		placeholder: 'Add Field',
+		default: {},
+		displayOptions: { show: { resource, operation: ['validate'] } },
+		options: [
+			{
+				displayName: 'Activation ID',
+				name: 'activation_id',
+				type: 'string',
+				default: '',
+				description: 'Required if the license key benefit has activations enabled',
+				routing: { request: { body: { activation_id: '={{$value}}' } } },
+			},
+			{
+				displayName: 'Benefit ID',
+				name: 'benefit_id',
+				type: 'string',
+				default: '',
+				routing: { request: { body: { benefit_id: '={{$value}}' } } },
+			},
+			{
+				displayName: 'Customer ID',
+				name: 'customer_id',
+				type: 'string',
+				default: '',
+				routing: { request: { body: { customer_id: '={{$value}}' } } },
+			},
+			{
+				displayName: 'Increment Usage',
+				name: 'increment_usage',
+				type: 'number',
+				default: 0,
+				typeOptions: { minValue: 0 },
+				description: 'Amount to increment the license key usage counter by during this validation',
+				routing: { request: { body: { increment_usage: '={{$value}}' } } },
+			},
+		],
+	},
+	typedMetadataField('conditions', 'conditions', 'Conditions', {
+		resource,
+		operation: ['activate', 'validate'],
+	}),
+	typedMetadataField('meta', 'meta', 'Meta', { resource, operation: ['activate'] }),
+];

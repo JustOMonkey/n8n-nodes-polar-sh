@@ -1,0 +1,165 @@
+import type { INodeProperties } from 'n8n-workflow';
+import { paginationProperties, typedMetadataField } from '../../Polar/shared/descriptions';
+import { portalRouting } from '../shared/errorHandling';
+
+const resource = ['seat'];
+
+export const seatDescription: INodeProperties[] = [
+	{
+		displayName: 'Operation',
+		name: 'operation',
+		type: 'options',
+		noDataExpression: true,
+		displayOptions: { show: { resource } },
+		options: [
+			{
+				name: 'Assign',
+				value: 'assign',
+				action: 'Assign a seat',
+				description: 'Give one of the customer\'s seats to a person, by email or ID',
+				routing: portalRouting('POST', '=/customer-portal/seats'),
+			},
+			{
+				name: 'Get Claimed Subscriptions',
+				value: 'getClaimedSubscriptions',
+				action: 'Get claimed subscriptions',
+				description: 'List the subscriptions the customer has a claimed seat on',
+				routing: portalRouting('GET', '=/customer-portal/seats/subscriptions'),
+			},
+			{
+				name: 'Get Many',
+				value: 'getAll',
+				action: 'Get many seats',
+				description: 'List the seats of a seat-based subscription or order, with available/total counts',
+				routing: portalRouting('GET', '=/customer-portal/seats'),
+			},
+			{
+				name: 'Resend Invitation',
+				value: 'resendInvitation',
+				action: 'Resend a seat invitation',
+				description: 'Send the seat invitation email again',
+				routing: portalRouting('POST', '=/customer-portal/seats/{{$parameter["seatId"]}}/resend'),
+			},
+			{
+				name: 'Revoke',
+				value: 'revoke',
+				action: 'Revoke a seat',
+				description: 'Take a seat back from the person it was assigned to',
+				routing: portalRouting('DELETE', '=/customer-portal/seats/{{$parameter["seatId"]}}'),
+			},
+		],
+		default: 'getAll',
+	},
+	{
+		displayName: 'Seat ID',
+		name: 'seatId',
+		type: 'string',
+		default: '',
+		required: true,
+		displayOptions: { show: { resource, operation: ['resendInvitation', 'revoke'] } },
+	},
+	...paginationProperties({ resource, operation: ['getClaimedSubscriptions'] }),
+	{
+		displayName: 'Filters',
+		name: 'filters',
+		type: 'collection',
+		placeholder: 'Add Filter',
+		default: {},
+		displayOptions: { show: { resource, operation: ['getAll'] } },
+		description: 'Set the subscription or order the seats belong to',
+		options: [
+			{
+				displayName: 'Order ID',
+				name: 'order_id',
+				type: 'string',
+				default: '',
+				routing: { request: { qs: { order_id: '={{$value}}' } } },
+			},
+			{
+				displayName: 'Subscription ID',
+				name: 'subscription_id',
+				type: 'string',
+				default: '',
+				routing: { request: { qs: { subscription_id: '={{$value}}' } } },
+			},
+		],
+	},
+	{
+		displayName: 'Assign Fields',
+		name: 'assignFields',
+		type: 'collection',
+		placeholder: 'Add Field',
+		default: {},
+		displayOptions: { show: { resource, operation: ['assign'] } },
+		description:
+			'Set the subscription, order or checkout the seat comes from, and who receives it (email, customer or member)',
+		options: [
+			{
+				displayName: 'Checkout ID',
+				name: 'checkout_id',
+				type: 'string',
+				default: '',
+				routing: { request: { body: { checkout_id: '={{$value}}' } } },
+			},
+			{
+				displayName: 'Customer ID',
+				name: 'customer_id',
+				type: 'string',
+				default: '',
+				routing: { request: { body: { customer_id: '={{$value}}' } } },
+			},
+			{
+				displayName: 'Email',
+				name: 'email',
+				type: 'string',
+				default: '',
+				placeholder: 'name@email.com',
+				routing: { request: { body: { email: '={{$value}}' } } },
+			},
+			{
+				displayName: 'External Customer ID',
+				name: 'external_customer_id',
+				type: 'string',
+				default: '',
+				routing: { request: { body: { external_customer_id: '={{$value}}' } } },
+			},
+			{
+				displayName: 'External Member ID',
+				name: 'external_member_id',
+				type: 'string',
+				default: '',
+				routing: { request: { body: { external_member_id: '={{$value}}' } } },
+			},
+			{
+				displayName: 'Immediate Claim',
+				name: 'immediate_claim',
+				type: 'boolean',
+				default: false,
+				description: 'Whether to claim the seat right away instead of sending an invitation',
+				routing: { request: { body: { immediate_claim: '={{$value}}' } } },
+			},
+			{
+				displayName: 'Member ID',
+				name: 'member_id',
+				type: 'string',
+				default: '',
+				routing: { request: { body: { member_id: '={{$value}}' } } },
+			},
+			{
+				displayName: 'Order ID',
+				name: 'order_id',
+				type: 'string',
+				default: '',
+				routing: { request: { body: { order_id: '={{$value}}' } } },
+			},
+			{
+				displayName: 'Subscription ID',
+				name: 'subscription_id',
+				type: 'string',
+				default: '',
+				routing: { request: { body: { subscription_id: '={{$value}}' } } },
+			},
+		],
+	},
+	typedMetadataField('metadata', 'metadata', 'Metadata', { resource, operation: ['assign'] }),
+];
