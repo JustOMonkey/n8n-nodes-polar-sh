@@ -43,6 +43,7 @@ Resource + Operation node covering:
 - **Metric** — Get, Export (CSV file), Get Limits — revenue/order/subscription analytics over a date range and interval
 - **Metric Dashboard** — Create, Delete, Get, Get Many, Update — custom metrics dashboards shown in the Polar app
 - **Order** — Get Many, Get, Create, Update, Finalize, Generate Invoice, Get Invoice, Get Receipt, Export (CSV file)
+- **Organization** — Get, Get Many, Update — your token's organization (Get Many is the easy way to find its ID); Update covers the public profile and defaults (name, avatar, support email, website, country, presentment currency, tax behavior)
 - **Payment** — Get Many, Get — read-only view of payments (`payments:read` only; no create/update/delete exists in the API)
 - **Product** — Get Many, Get, Create, Update, Update Benefits, Delete (unused products only)
 - **Refund** — Get Many, Create

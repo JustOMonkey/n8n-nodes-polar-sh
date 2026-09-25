@@ -159,6 +159,11 @@ const OPERATION_SCOPES: Record<string, Record<string, string[] | null>> = {
 		getReceipt: ['orders:read'],
 		update: ['orders:write'],
 	},
+	organization: {
+		get: ['organizations:read', 'organizations:write'],
+		getAll: ['organizations:read', 'organizations:write'],
+		update: ['organizations:write'],
+	},
 	payment: { get: ['payments:read'], getAll: ['payments:read'] },
 	product: {
 		create: ['products:write'],

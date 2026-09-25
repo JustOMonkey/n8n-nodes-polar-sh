@@ -19,6 +19,7 @@ import { meterDescription } from './resources/meter';
 import { metricDescription } from './resources/metric';
 import { metricDashboardDescription } from './resources/metricDashboard';
 import { orderDescription } from './resources/order';
+import { organizationDescription } from './resources/organization';
 import { paymentDescription } from './resources/payment';
 import { productDescription } from './resources/product';
 import { refundDescription } from './resources/refund';
@@ -87,6 +88,7 @@ export class Polar implements INodeType {
 					{ name: 'Metric', value: 'metric' },
 					{ name: 'Metric Dashboard', value: 'metricDashboard' },
 					{ name: 'Order', value: 'order' },
+					{ name: 'Organization', value: 'organization' },
 					{ name: 'Payment', value: 'payment' },
 					{ name: 'Product', value: 'product' },
 					{ name: 'Refund', value: 'refund' },
@@ -116,6 +118,7 @@ export class Polar implements INodeType {
 			...metricDescription,
 			...metricDashboardDescription,
 			...orderDescription,
+			...organizationDescription,
 			...paymentDescription,
 			...productDescription,
 			...refundDescription,
