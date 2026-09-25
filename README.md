@@ -40,6 +40,8 @@ Resource + Operation node covering:
 - **License Key** — Activate, Deactivate, Get, Get Activation, Get Many, Rotate, Update, Validate — license-gated software activation and validation
 - **Member** — Create, Create for External Customer, Delete, Delete by External ID, Get, Get by External ID, Get Many, Get Many for External Customer, Update, Update by External ID — manage individual people within a B2B customer (requires the organization's member-management feature). Every operation is scoped to a customer, by Polar ID or by your external ID.
 - **Meter** — Create, Get, Get Many, Get Quantities, Update
+- **Metric** — Get, Export (CSV file), Get Limits — revenue/order/subscription analytics over a date range and interval
+- **Metric Dashboard** — Create, Delete, Get, Get Many, Update — custom metrics dashboards shown in the Polar app
 - **Order** — Get Many, Get, Create, Update, Finalize, Generate Invoice, Get Invoice, Get Receipt, Export (CSV file)
 - **Payment** — Get Many, Get — read-only view of payments (`payments:read` only; no create/update/delete exists in the API)
 - **Product** — Get Many, Get, Create, Update, Update Benefits, Delete (unused products only)

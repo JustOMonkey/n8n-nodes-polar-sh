@@ -136,6 +136,18 @@ const OPERATION_SCOPES: Record<string, Record<string, string[] | null>> = {
 		getQuantities: ['meters:read', 'meters:write'],
 		update: ['meters:write'],
 	},
+	metric: {
+		export: ['metrics:read'],
+		get: ['metrics:read'],
+		getLimits: ['metrics:read'],
+	},
+	metricDashboard: {
+		create: ['metrics:write'],
+		delete: ['metrics:write'],
+		get: ['metrics:read'],
+		getAll: ['metrics:read'],
+		update: ['metrics:write'],
+	},
 	order: {
 		create: ['orders:write'],
 		export: ['orders:read'],

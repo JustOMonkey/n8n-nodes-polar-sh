@@ -21,3 +21,18 @@ test('Member operations all target /customers/.../members', () => {
 		assert.match(option.routing.request.url, /^=\/customers\/(external\/)?\{\{.+\}\}\/members/);
 	}
 });
+
+test('Metric start/end dates are truncated to YYYY-MM-DD before sending', () => {
+	for (const name of ['startDate', 'endDate']) {
+		const prop = properties.find((p) => p.name === name && p.displayOptions?.show?.resource?.[0] === 'metric');
+		assert.ok(prop, `missing metric ${name}`);
+		assert.equal(prop.routing.send.value, '={{ String($value).slice(0, 10) }}');
+	}
+});
+
+test('Metric Dashboard Get Many does not use pagination (bare array response)', () => {
+	const paginated = properties.find(
+		(p) => p.name === 'returnAll' && p.displayOptions?.show?.resource?.[0] === 'metricDashboard',
+	);
+	assert.equal(paginated, undefined);
+});

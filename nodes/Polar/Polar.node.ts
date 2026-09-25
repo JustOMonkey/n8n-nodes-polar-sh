@@ -16,6 +16,8 @@ import { fileDescription } from './resources/file';
 import { licenseKeyDescription } from './resources/licenseKey';
 import { memberDescription } from './resources/member';
 import { meterDescription } from './resources/meter';
+import { metricDescription } from './resources/metric';
+import { metricDashboardDescription } from './resources/metricDashboard';
 import { orderDescription } from './resources/order';
 import { paymentDescription } from './resources/payment';
 import { productDescription } from './resources/product';
@@ -82,6 +84,8 @@ export class Polar implements INodeType {
 					{ name: 'License Key', value: 'licenseKey' },
 					{ name: 'Member', value: 'member' },
 					{ name: 'Meter', value: 'meter' },
+					{ name: 'Metric', value: 'metric' },
+					{ name: 'Metric Dashboard', value: 'metricDashboard' },
 					{ name: 'Order', value: 'order' },
 					{ name: 'Payment', value: 'payment' },
 					{ name: 'Product', value: 'product' },
@@ -109,6 +113,8 @@ export class Polar implements INodeType {
 			...licenseKeyDescription,
 			...memberDescription,
 			...meterDescription,
+			...metricDescription,
+			...metricDashboardDescription,
 			...orderDescription,
 			...paymentDescription,
 			...productDescription,
