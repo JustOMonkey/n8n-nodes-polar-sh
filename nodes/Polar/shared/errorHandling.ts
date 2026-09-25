@@ -114,11 +114,15 @@ const OPERATION_SCOPES: Record<string, Record<string, string[] | null>> = {
 	},
 	member: {
 		create: ['members:write'],
+		createExternal: ['members:write'],
 		delete: ['members:write'],
+		deleteExternal: ['members:write'],
 		get: ['members:read', 'members:write'],
-		getByExternalId: ['members:read', 'members:write'],
 		getAll: ['members:read', 'members:write'],
+		getAllExternal: ['members:read', 'members:write'],
+		getByExternalId: ['members:read', 'members:write'],
 		update: ['members:write'],
+		updateExternal: ['members:write'],
 	},
 	meter: {
 		create: ['meters:write'],

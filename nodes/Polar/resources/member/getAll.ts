@@ -1,7 +1,7 @@
 import type { INodeProperties } from 'n8n-workflow';
 import { paginationProperties } from '../../shared/descriptions';
 
-const show = { resource: ['member'], operation: ['getAll'] };
+const show = { resource: ['member'], operation: ['getAll', 'getAllExternal'] };
 
 export const memberGetAllDescription: INodeProperties[] = [
 	...paginationProperties(show),
@@ -13,20 +13,6 @@ export const memberGetAllDescription: INodeProperties[] = [
 		default: {},
 		displayOptions: { show },
 		options: [
-			{
-				displayName: 'Customer ID',
-				name: 'customer_id',
-				type: 'string',
-				default: '',
-				routing: { request: { qs: { customer_id: '={{$value}}' } } },
-			},
-			{
-				displayName: 'External Customer ID',
-				name: 'external_customer_id',
-				type: 'string',
-				default: '',
-				routing: { request: { qs: { external_customer_id: '={{$value}}' } } },
-			},
 			{
 				displayName: 'Role',
 				name: 'role',

@@ -1,16 +1,8 @@
 import type { INodeProperties } from 'n8n-workflow';
 
-const show = { resource: ['member'], operation: ['update'] };
+const show = { resource: ['member'], operation: ['update', 'updateExternal'] };
 
 export const memberUpdateDescription: INodeProperties[] = [
-	{
-		displayName: 'Member ID',
-		name: 'memberId',
-		type: 'string',
-		default: '',
-		required: true,
-		displayOptions: { show },
-	},
 	{
 		displayName: 'Update Fields',
 		name: 'updateFields',
@@ -19,6 +11,14 @@ export const memberUpdateDescription: INodeProperties[] = [
 		default: {},
 		displayOptions: { show },
 		options: [
+			{
+				displayName: 'Email',
+				name: 'email',
+				type: 'string',
+				default: '',
+				placeholder: 'name@email.com',
+				routing: { request: { body: { email: '={{$value}}' } } },
+			},
 			{
 				displayName: 'Name',
 				name: 'name',

@@ -1,18 +1,8 @@
 import type { INodeProperties } from 'n8n-workflow';
 
-const show = { resource: ['member'], operation: ['create'] };
+const show = { resource: ['member'], operation: ['create', 'createExternal'] };
 
 export const memberCreateDescription: INodeProperties[] = [
-	{
-		displayName: 'Customer ID',
-		name: 'customerId',
-		type: 'string',
-		default: '',
-		required: true,
-		displayOptions: { show },
-		description: 'The customer this member belongs to',
-		routing: { send: { type: 'body', property: 'customer_id' } },
-	},
 	{
 		displayName: 'Email',
 		name: 'email',
