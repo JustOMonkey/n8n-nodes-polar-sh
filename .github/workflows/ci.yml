@@ -32,3 +32,7 @@ jobs:
 
       - name: Run build
         run: npm run build
+
+      # Tests read the built output in dist/, so they run after the build.
+      - name: Run tests
+        run: npm test
