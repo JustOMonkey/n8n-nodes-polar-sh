@@ -10,7 +10,7 @@ import { NodeApiError } from 'n8n-workflow';
 
 // Scopes required per resource+operation, grounded in the `security.oat` requirement of each
 // endpoint in Polar's versioned OpenAPI spec (https://polar.sh/docs/openapi/2026-10.openapi.json,
-// checked 2026-08-21) — the actual machine-readable security requirement, not the free-text
+// checked 2026-09-25) — the actual machine-readable security requirement, not the free-text
 // "**Scopes**:" line in the unversioned docs spec, which turned out to list the same scopes
 // without making it clear they combine.
 //
@@ -22,9 +22,6 @@ import { NodeApiError } from 'n8n-workflow';
 //
 // `null` marks an operation with no `oat` security requirement at all (a public, invitation- or
 // client-secret-based endpoint) — a 403 there isn't a token-scope issue.
-// `organizationAccessToken`'s endpoints aren't present in the versioned spec (token management
-// isn't exposed there); its scopes come from the unversioned spec's prose annotations instead,
-// which are unambiguous single-scope entries.
 const OPERATION_SCOPES: Record<string, Record<string, string[] | null>> = {
 	benefit: {
 		create: ['benefits:write'],
@@ -139,12 +136,6 @@ const OPERATION_SCOPES: Record<string, Record<string, string[] | null>> = {
 		getAll: ['orders:read'],
 		getReceipt: ['orders:read'],
 		update: ['orders:write'],
-	},
-	organizationAccessToken: {
-		create: ['organization_access_tokens:write'],
-		delete: ['organization_access_tokens:write'],
-		getAll: ['organization_access_tokens:read'],
-		update: ['organization_access_tokens:write'],
 	},
 	payment: { get: ['payments:read'], getAll: ['payments:read'] },
 	product: {
