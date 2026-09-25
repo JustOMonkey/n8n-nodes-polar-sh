@@ -5,6 +5,7 @@ import { productGetDescription } from './get';
 import { productCreateDescription } from './create';
 import { productUpdateDescription } from './update';
 import { productUpdateBenefitsDescription } from './updateBenefits';
+import { productDeleteDescription } from './delete';
 
 const showOnlyForProduct = { resource: ['product'] };
 
@@ -23,6 +24,20 @@ export const productDescription: INodeProperties[] = [
 				description: 'Create a new product',
 				routing: {
 					request: { method: 'POST', url: '=/products/', ignoreHttpStatusErrors: true },
+					output: { postReceive: [handlePolarApiError] },
+				},
+			},
+			{
+				name: 'Delete',
+				value: 'delete',
+				action: 'Delete a product',
+				description: 'Permanently delete an unused product',
+				routing: {
+					request: {
+						method: 'DELETE',
+						url: '=/products/{{$parameter["productId"]}}',
+						ignoreHttpStatusErrors: true,
+					},
 					output: { postReceive: [handlePolarApiError] },
 				},
 			},
@@ -87,4 +102,5 @@ export const productDescription: INodeProperties[] = [
 	...productCreateDescription,
 	...productUpdateDescription,
 	...productUpdateBenefitsDescription,
+	...productDeleteDescription,
 ];

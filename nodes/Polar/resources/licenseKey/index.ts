@@ -7,6 +7,7 @@ import { licenseKeyGetActivationDescription } from './getActivation';
 import { licenseKeyValidateDescription } from './validate';
 import { licenseKeyActivateDescription } from './activate';
 import { licenseKeyDeactivateDescription } from './deactivate';
+import { licenseKeyRotateDescription } from './rotate';
 
 const showOnlyForLicenseKey = { resource: ['licenseKey'] };
 
@@ -81,6 +82,20 @@ export const licenseKeyDescription: INodeProperties[] = [
 				},
 			},
 			{
+				name: 'Rotate',
+				value: 'rotate',
+				action: 'Rotate a license key',
+				description: 'Replace a license key with a newly generated one',
+				routing: {
+					request: {
+						method: 'POST',
+						url: '=/license-keys/{{$parameter["licenseKeyId"]}}/rotate',
+						ignoreHttpStatusErrors: true,
+					},
+					output: { postReceive: [handlePolarApiError] },
+				},
+			},
+			{
 				name: 'Update',
 				value: 'update',
 				action: 'Update a license key',
@@ -115,4 +130,5 @@ export const licenseKeyDescription: INodeProperties[] = [
 	...licenseKeyValidateDescription,
 	...licenseKeyActivateDescription,
 	...licenseKeyDeactivateDescription,
+	...licenseKeyRotateDescription,
 ];

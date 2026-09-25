@@ -23,26 +23,26 @@ Follow the [installation guide](https://docs.n8n.io/integrations/community-nodes
 
 Resource + Operation node covering:
 
-- **Benefit** — Get Many, Get, Create, Update, Delete, Get Grants
+- **Benefit** — Get Many, Get, Create, Update, Delete, Get Files, Get Grants
 - **Benefit Grant** — Get Many
 - **Checkout** — Get Many, Get, Create, Update
 - **Checkout Link** — Get Many, Get, Create, Update, Delete
 - **Custom Field** — Create, Delete, Get, Get Many, Update — org-defined extra data fields (text/number/date/checkbox/select) collected on checkout
-- **Customer** — Get Many, Get, Get by External ID, Create, Update, Update by External ID, Delete, Delete by External ID, Get State, Get State by External ID, Get Payment Methods
+- **Customer** — Get Many, Get, Get by External ID, Create, Update, Update by External ID, Delete, Delete by External ID, Get State, Get State by External ID, Get Payment Methods, Get Payment Methods by External ID, Export (CSV file)
 - **Customer Meter** — Get Many, Get
 - **Customer Seat** — Assign Seat, Claim Seat, Get Claim Info, Get Many, Resend Invitation, Revoke Seat — assign, revoke, and manage seat-based subscription/order member seats; Get Claim Info and Claim Seat require no Polar authentication (they're for the invited person's own client)
 - **Customer Session** — Create — generate a one-time customer portal access token
 - **Discount** — Get Many, Get, Create, Update, Delete
-- **Dispute** — Get, Get Many — read-only view of payment disputes/chargebacks
+- **Dispute** — Accept, Get, Get Many — payment disputes/chargebacks; Accept concedes a dispute (irreversible)
 - **Event** — Get Many, Get, Ingest, List Names
 - **Event Type** — Get Many, Update
 - **File** — Complete Upload, Create, Delete, Get Many, Update — declarative primitives for Polar's S3 multipart file upload flow (Create returns presigned upload URLs; actually PUTing file bytes to S3 is done in your own workflow, e.g. with an HTTP Request node, before calling Complete Upload)
-- **License Key** — Activate, Deactivate, Get, Get Activation, Get Many, Update, Validate — license-gated software activation and validation
+- **License Key** — Activate, Deactivate, Get, Get Activation, Get Many, Rotate, Update, Validate — license-gated software activation and validation
 - **Member** — Create, Create for External Customer, Delete, Delete by External ID, Get, Get by External ID, Get Many, Get Many for External Customer, Update, Update by External ID — manage individual people within a B2B customer (requires the organization's member-management feature). Every operation is scoped to a customer, by Polar ID or by your external ID.
 - **Meter** — Create, Get, Get Many, Get Quantities, Update
 - **Order** — Get Many, Get, Create, Update, Finalize, Generate Invoice, Get Invoice, Get Receipt
 - **Payment** — Get Many, Get — read-only view of payments (`payments:read` only; no create/update/delete exists in the API)
-- **Product** — Get Many, Get, Create, Update, Update Benefits
+- **Product** — Get Many, Get, Create, Update, Update Benefits, Delete (unused products only)
 - **Refund** — Get Many, Create
 - **Subscription** — Get Many, Get, Create, Update, Update Seats, Update Billing Period, Cancel, Revoke, Pause, Resume, Clear Pending Update
 - **Webhook Delivery** — Get Many, Redeliver — delivery history for webhook events, and scheduling redelivery of a specific event

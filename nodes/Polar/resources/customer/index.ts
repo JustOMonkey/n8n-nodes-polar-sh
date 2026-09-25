@@ -7,6 +7,8 @@ import { customerUpdateDescription } from './update';
 import { customerDeleteDescription } from './delete';
 import { customerGetStateDescription } from './getState';
 import { customerGetPaymentMethodsDescription } from './getPaymentMethods';
+import { csvToBinary } from '../../shared/binary';
+import { customerGetPaymentMethodsExternalDescription } from './getPaymentMethodsExternal';
 
 const showOnlyForCustomer = { resource: ['customer'] };
 
@@ -57,6 +59,24 @@ export const customerDescription: INodeProperties[] = [
 				},
 			},
 			{
+				name: 'Export',
+				value: 'export',
+				action: 'Export customers',
+				description: 'Download all customers as a CSV file (binary property "data")',
+				routing: {
+					request: {
+						method: 'GET',
+						url: '=/customers/export',
+						ignoreHttpStatusErrors: true,
+						encoding: 'arraybuffer',
+						json: false,
+						arrayFormat: 'repeat',
+						headers: { Accept: 'text/csv' },
+					},
+					output: { postReceive: [handlePolarApiError, csvToBinary('customers-export.csv')] },
+				},
+			},
+			{
 				name: 'Get',
 				value: 'get',
 				action: 'Get a customer',
@@ -103,6 +123,21 @@ export const customerDescription: INodeProperties[] = [
 					request: {
 						method: 'GET',
 						url: '=/customers/{{$parameter["customerId"]}}/payment-methods',
+						ignoreHttpStatusErrors: true,
+					},
+					output: { postReceive: [handlePolarApiError] },
+				},
+			},
+			{
+				name: 'Get Payment Methods by External ID',
+				value: 'getPaymentMethodsExternal',
+				action: 'Get a customer payment methods by external ID',
+				description:
+					"List saved payment methods for a customer identified by your system's external ID",
+				routing: {
+					request: {
+						method: 'GET',
+						url: '=/customers/external/{{$parameter["externalCustomerId"]}}/payment-methods',
 						ignoreHttpStatusErrors: true,
 					},
 					output: { postReceive: [handlePolarApiError] },
@@ -176,4 +211,5 @@ export const customerDescription: INodeProperties[] = [
 	...customerDeleteDescription,
 	...customerGetStateDescription,
 	...customerGetPaymentMethodsDescription,
+	...customerGetPaymentMethodsExternalDescription,
 ];

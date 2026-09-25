@@ -6,6 +6,7 @@ import { benefitCreateDescription } from './create';
 import { benefitUpdateDescription } from './update';
 import { benefitDeleteDescription } from './delete';
 import { benefitGetGrantsDescription } from './getGrants';
+import { benefitGetFilesDescription } from './getFiles';
 
 const showOnlyForBenefit = { resource: ['benefit'] };
 
@@ -50,6 +51,20 @@ export const benefitDescription: INodeProperties[] = [
 					request: {
 						method: 'GET',
 						url: '=/benefits/{{$parameter["benefitId"]}}',
+						ignoreHttpStatusErrors: true,
+					},
+					output: { postReceive: [handlePolarApiError] },
+				},
+			},
+			{
+				name: 'Get Files',
+				value: 'getFiles',
+				action: 'Get benefit files',
+				description: 'List the files attached to a Downloadables benefit',
+				routing: {
+					request: {
+						method: 'GET',
+						url: '=/benefits/{{$parameter["benefitId"]}}/files',
 						ignoreHttpStatusErrors: true,
 					},
 					output: { postReceive: [handlePolarApiError] },
@@ -103,4 +118,5 @@ export const benefitDescription: INodeProperties[] = [
 	...benefitUpdateDescription,
 	...benefitDeleteDescription,
 	...benefitGetGrantsDescription,
+	...benefitGetFilesDescription,
 ];
